@@ -3,17 +3,11 @@
     <template v-if="!isMobile">
       <!--全屏 -->
       <div class="setting-item" @click="toggle">
-        <svg-icon
-          :icon-class="isFullscreen ? 'fullscreen-exit' : 'fullscreen'"
-        />
+        <svg-icon :icon-class="isFullscreen ? 'fullscreen-exit' : 'fullscreen'" />
       </div>
 
       <!-- 布局大小 -->
-      <el-tooltip
-        :content="$t('sizeSelect.tooltip')"
-        effect="dark"
-        placement="bottom"
-      >
+      <el-tooltip :content="$t('sizeSelect.tooltip')" effect="dark" placement="bottom">
         <size-select class="setting-item" />
       </el-tooltip>
 
@@ -26,23 +20,15 @@
       <div class="flex-center h100% p10px">
 
         <!-- :src="userStore.user.avatar + '?imageView2/1/w/80/h/80'" -->
-        <img
-          :src="userStore.user.avatar + '?imageView2/1/w/100/h/80'"
-          class="rounded-full mr-10px w24px w24px"
-        />
+        <img :src="userStore.user.avatar + '?imageView2/1/w/100/h/80'" class="rounded-full mr-10px w24px w24px" />
         <span>{{ userStore.user.username }} </span>-<span> {{ userStore.user.nickname }}</span>
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <a
-            target="_blank"
-            href=""
-          >
+          <a target="_blank" href="">
             <el-dropdown-item>个人中心</el-dropdown-item>
           </a>
-          <a target="_blank" href="#">
-            <el-dropdown-item>账户设置</el-dropdown-item>
-          </a>
+          <el-dropdown-item @click="clickDialog">修改密码</el-dropdown-item>
           <el-dropdown-item divided @click="logout">
             {{ $t("navbar.logout") }}
           </el-dropdown-item>
@@ -56,6 +42,9 @@
         <svg-icon icon-class="setting" />
       </div>
     </template>
+    <el-dialog v-model="dialogTableVisible" title="修改密码" width="400">
+      <NavbarLogout />
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -68,11 +57,13 @@ import {
 import defaultSettings from "@/settings";
 import { DeviceEnum } from "@/enums/DeviceEnum";
 import { reactive, ref } from 'vue';
+import NavbarLogout from "./NavbarLogout.vue";
 
 const appStore = useAppStore();
 const tagsViewStore = useTagsViewStore();
 const userStore = useUserStore();
 const settingStore = useSettingsStore();
+const dialogTableVisible = ref(false);
 
 const route = useRoute();
 const router = useRouter();
@@ -80,17 +71,19 @@ const router = useRouter();
 const isMobile = computed(() => appStore.device === DeviceEnum.MOBILE);
 
 const { isFullscreen, toggle } = useFullscreen();
-var username=ref('')
+var username = ref('')
 onMounted(() => {
   console.log('onMounted')
-  username.value=  sessionStorage.getItem("username")   as string
+  username.value = sessionStorage.getItem("username") as string
 
-console.log("username",username)
+  console.log("username", username)
   // 组件挂载完成后的操作
   //formLabelAlign2.ddate='222';
-
-  
 });
+// 打开个人中心弹窗
+const clickDialog = () => {
+  dialogTableVisible.value = true;
+};
 /**
  * 注销
  */
@@ -129,6 +122,7 @@ function logout() {
 
 .layout-top,
 .layout-mix {
+
   .setting-item,
   .el-icon {
     color: var(--el-color-white);

@@ -2,6 +2,7 @@ import { RouteRecordRaw } from "vue-router";
 import { constantRoutes } from "@/router";
 import { store } from "@/store";
 import { listRoutes } from "@/api/menu";
+import { Competence } from "@/router/Competence.ts";
 
 const modules = import.meta.glob("../../views/**/**.vue");
 const Layout = () => import("@/layout/index.vue");
@@ -63,10 +64,9 @@ const filterAsyncRoutes = (routes: RouteRecordRaw[], roles: string[]) => {
 
       asyncRoutes.push(tmpRoute);
       //console.log('tmpRoute_asyncRoutes',tmpRoute);
-      
     }
   });
-console.log('asyncRoutes',asyncRoutes);
+  console.log("asyncRoutes", asyncRoutes);
   return asyncRoutes;
 };
 
@@ -92,9 +92,10 @@ export const usePermissionStore = defineStore("permission", () => {
         .then(({ data: asyncRoutes }) => {
           // 根据角色获取有访问权限的路由
           const accessedRoutes = filterAsyncRoutes(asyncRoutes, roles);
-          
-          console.log('accessedRoutes',accessedRoutes);
-          
+          accessedRoutes.push(Competence);
+
+          console.log("accessedRoutes", accessedRoutes);
+
           setRoutes(accessedRoutes);
           resolve(accessedRoutes);
         })

@@ -8,7 +8,11 @@ export default {
   login: {
     username: "用户名",
     password: "密码",
+    password1: "请输入旧密码",
+    password2: "请输入新密码",
+    password3: "请再次确认输入新密码",
     login: "登 录",
+    revise: "修 改",
     captchaCode: "验证码",
     capsLock: "大写锁定已打开",
     message: {
@@ -17,6 +21,14 @@ export default {
       },
       password: {
         required: "请输入密码",
+        min: "密码不能少于6位",
+      },
+      password1: {
+        required: "请输入新密码",
+        min: "密码不能少于6位",
+      },
+      password2: {
+        required: "请再次输入新密码",
         min: "密码不能少于6位",
       },
       captchaCode: {
