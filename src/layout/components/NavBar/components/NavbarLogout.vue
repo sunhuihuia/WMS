@@ -5,6 +5,7 @@ import { LocationQuery, LocationQueryValue, useRoute } from "vue-router";
 import router from "@/router";
 import { ThemeEnum } from "@/enums/ThemeEnum";
 import axios from "axios";
+import { sys } from "typescript";
 
 // Stores
 const userStore = useUserStore();
@@ -19,10 +20,17 @@ const loading = ref(false); // 按钮loading
 const isCapslock = ref(false); // 是否大写锁定
 const loginFormRef = ref(ElForm); // 登录表单ref
 const { height } = useWindowSize();
-
+const SysInfo = ref({
+  cUserId: 'demo',
+  cVenCode: '0080',
+  database: 'ufdata_002_2019',
+  ApiUrl: '',
+})
 const loginData = ref<LoginData>({
   username: "demo",
   password: "",
+  password1: "",
+  password2: "",
 });
 
 const loginRules = computed(() => {
@@ -81,11 +89,32 @@ const globalObject =
   instance?.appContext.config.globalProperties.$myGlobalObject;
 async function handleLogin() {
   try {
+    console.log(SqlWork);
+    const res = await axios.post(globalObject.ApiUrl,
+      {
+        "CommandType": "EditPwd", "database": SysInfo.value.database,
+        "cuser_id": SysInfo.value.cUserId, "cpasswordOld": loginData.value.password, "cpasswordNew": loginData.value.password1
+      });
   } catch (error) {
     console.error(error);
   }
 }
 
+const SqlWork = async (CommandType: string, SqlsStr: string) => {
+
+  console.log(globalObject);
+
+  const res = await axios.post(globalObject.ApiUrl,
+    {
+      "CommandType": CommandType, "database": SysInfo.value.database,
+      "SqlsStr": SqlsStr
+    });
+  //console.log(res); 
+  //    this.tTable =res.data.dataDetail[0];
+  //   console.log(this.tTable);
+  return res
+
+}
 /**
  * 主题切换
  */
