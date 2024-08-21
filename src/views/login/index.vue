@@ -1,7 +1,5 @@
 <template>
-  
   <div class="login-container">
-    
     <!-- 顶部 -->
     <div class="absolute-lt flex-x-end p-3 w-full">
       <el-switch
@@ -13,18 +11,21 @@
       />
       <lang-select class="ml-2 cursor-pointer" />
     </div>
-    
+    <img src="../../assets/images/logo.svg" alt="" />
     <!-- 登录表单 -->
     <el-card class="!border-none !bg-transparent !rounded-4% w-100 <sm:w-85">
-      
       <div class="text-center relative">
         <h2>{{ defaultSettings.title }}</h2>
         <el-tag class="ml-2 absolute-rt">{{ defaultSettings.version }}</el-tag>
-        <div >       
-       <image   src="@/assets/images/logo.c5e0de12.png" alt="logo" class="image-size"></image>
-     </div>
+        <div>
+          <image
+            src="@/assets/images/logo.c5e0de12.png"
+            alt="logo"
+            class="image-size"
+          ></image>
+        </div>
       </div>
-      
+
       <el-form
         ref="loginFormRef"
         :model="loginData"
@@ -71,36 +72,35 @@
         </el-tooltip>
         <el-form-item prop="caccid">
           <div class="flex-y-center w-full">
-             
             <el-select
-        v-model="ElSelectValue"           
-        placeholder="选择账套"
-        @visible-change="HandleSelectChange_ElSelect"
-        :loading="ElSelectLoading"
-        style="width: 100%"        
-        name="caccid"
-      >
-        <el-option
-          v-for="item in ElSelectOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select> 
+              v-model="ElSelectValue"
+              placeholder="选择账套"
+              @visible-change="HandleSelectChange_ElSelect"
+              :loading="ElSelectLoading"
+              style="width: 100%"
+              name="caccid"
+            >
+              <el-option
+                v-for="item in ElSelectOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </div>
         </el-form-item>
-    
+
         <el-form-item prop="logindate">
           <div class="flex-y-center w-full">
-              
-		   				<el-date-picker v-model="logindate"  
-               type="date"
+            <el-date-picker
+              v-model="logindate"
+              type="date"
               placeholder="登录日期"
               format="YYYY/MM/DD"
               value-format="YYYY-MM-DD"
-              style="width: 100%"        
-            name="logindate"
-		   				/> 
+              style="width: 100%"
+              name="logindate"
+            />
           </div>
         </el-form-item>
         <!-- 验证码 -->
@@ -145,8 +145,7 @@
     <!-- ICP备案 -->
     <div class="absolute bottom-1 text-[10px] text-center" v-show="icpVisible">
       <p>
-        Copyright © 2021 - 2024 WLZH All Rights Reserved. 温岭中和
-        版权所有
+        Copyright © 2021 - 2024 WLZH All Rights Reserved. 温岭中和 版权所有
       </p>
       <p></p>
     </div>
@@ -162,7 +161,7 @@ import { LocationQuery, LocationQueryValue, useRoute } from "vue-router";
 import router from "@/router";
 import defaultSettings from "@/settings";
 import { ThemeEnum } from "@/enums/ThemeEnum";
-import axios from "axios"
+import axios from "axios";
 
 // Stores
 const userStore = useUserStore();
@@ -184,7 +183,7 @@ const loginData = ref<LoginData>({
   username: "demo",
   password: "",
 });
-const ElSelectValue=ref("");
+const ElSelectValue = ref("");
 
 const loginRules = computed(() => {
   return {
@@ -250,90 +249,107 @@ function getCaptcha() {
     captchaBase64.value = data.captchaBase64;
   });
 }
-const logindate=ref(new Date().toISOString().slice(0, 10))
-const ElSelectLoading=ref(false)
+const logindate = ref(new Date().toISOString().slice(0, 10));
+const ElSelectLoading = ref(false);
 interface AccListItem {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
-const ElSelectOptions=ref<AccListItem[]>([])
+const ElSelectOptions = ref<AccListItem[]>([]);
 
-async function HandleSelectChange_ElSelect(){
-  ElSelectLoading.value = true
-  const res0=await axios.post(globalObject.ApiUrl,{'CommandType':'login','database':'ufsystem',
-    'cuser_id':loginData.value.username,'cpassword':loginData.value.password });
-    console.log(res0.data)
-    if(res0.data.errcode=='0'){
-      
-      let res=await axios.post(globalObject.ApiUrl,{"CommandType":'select',"database":'ufsystem',
-    'SqlsStr':"select distinct b.cAcc_Id value, '['+b.cAcc_Id+']'+b.cAcc_Name label from  UFSystem..UA_Account b"  });
-    ElSelectLoading.value = false
-    console.log(res.data)
+async function HandleSelectChange_ElSelect() {
+  ElSelectLoading.value = true;
+  const res0 = await axios.post(globalObject.ApiUrl, {
+    CommandType: "login",
+    database: "ufsystem",
+    cuser_id: loginData.value.username,
+    cpassword: loginData.value.password,
+  });
+  console.log(res0.data);
+  if (res0.data.errcode == "0") {
+    let res = await axios.post(globalObject.ApiUrl, {
+      CommandType: "select",
+      database: "ufsystem",
+      SqlsStr:
+        "select distinct b.cAcc_Id value, '['+b.cAcc_Id+']'+b.cAcc_Name label from  UFSystem..UA_Account b",
+    });
+    ElSelectLoading.value = false;
+    console.log(res.data);
     ElSelectOptions.value = res.data.dataDetail;
-    }else{
-      ElMessage({
-									     message: '用户名或密码不正确',
-									     type: 'warning',
-									   })
-    }
-
-};
+  } else {
+    ElMessage({
+      message: "用户名或密码不正确",
+      type: "warning",
+    });
+  }
+}
 /**
  * 登录
  */
 const route = useRoute();
 const instance = getCurrentInstance();
-const globalObject = instance?.appContext.config.globalProperties.$myGlobalObject
+const globalObject =
+  instance?.appContext.config.globalProperties.$myGlobalObject;
 async function handleLogin() {
   try {
     //http://shsd666.gnway.org:9999/newwebapi
     //http://tzdzzy666.ufyct.com:7578/api/Values/Work
-    if(ElSelectValue.value==''){
+    if (ElSelectValue.value == "") {
       ElMessage({
-									     message: '必须选择账套',
-									     type: 'warning',
-									   })
-        return
+        message: "必须选择账套",
+        type: "warning",
+      });
+      return;
     }
-    if(logindate.value==''){
+    if (logindate.value == "") {
       ElMessage({
-									     message: '必须选择登录日期',
-									     type: 'warning',
-									   })
-        return
+        message: "必须选择登录日期",
+        type: "warning",
+      });
+      return;
     }
-    const res = await axios.post(globalObject.ApiUrl,{'CommandType':'login','database':'ufsystem',
-    'cuser_id':loginData.value.username,'cpassword':loginData.value.password });
-    console.log(res)
-    if(res.data.errcode=='0'){
-      const iyear=logindate.value.slice(0, 4)
-      console.log(iyear)
-      let res2=await axios.post(globalObject.ApiUrl,{"CommandType":'select',"database":'ufsystem',
-    'SqlsStr':"select cDatabase from   UFSystem..UA_AccountDatabase where cAcc_Id='"+ElSelectValue.value+"' and iBeginYear<="+(iyear.toString())+" and ISNULL(iEndYear,'2099')>=" +(iyear.toString())  });
-    const cDatabase=res2.data.dataDetail[0].cDatabase
-    console.log(cDatabase)
-        userStore.user.username=loginData.value.username  
-      var tokenType='Bearer';
-      var accessToken='11223344';
-      localStorage.setItem("accessToken", tokenType + " " + accessToken);//Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
-      console.log(loginData.value.username )
-      sessionStorage.setItem("username", loginData.value.username  );
-      sessionStorage.setItem("cDatabase", cDatabase );
-      
-        router.push({ path: '/dashboard', query: {} });
-    }
-    else{
+    const res = await axios.post(globalObject.ApiUrl, {
+      CommandType: "login",
+      database: "ufsystem",
+      cuser_id: loginData.value.username,
+      cpassword: loginData.value.password,
+    });
+    console.log(res);
+    if (res.data.errcode == "0") {
+      const iyear = logindate.value.slice(0, 4);
+      console.log(iyear);
+      let res2 = await axios.post(globalObject.ApiUrl, {
+        CommandType: "select",
+        database: "ufsystem",
+        SqlsStr:
+          "select cDatabase from   UFSystem..UA_AccountDatabase where cAcc_Id='" +
+          ElSelectValue.value +
+          "' and iBeginYear<=" +
+          iyear.toString() +
+          " and ISNULL(iEndYear,'2099')>=" +
+          iyear.toString(),
+      });
+      const cDatabase = res2.data.dataDetail[0].cDatabase;
+      console.log(cDatabase);
+      userStore.user.username = loginData.value.username;
+      var tokenType = "Bearer";
+      var accessToken = "11223344";
+      localStorage.setItem("accessToken", tokenType + " " + accessToken); //Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+      console.log(loginData.value.username);
+      sessionStorage.setItem("username", loginData.value.username);
+      sessionStorage.setItem("cDatabase", cDatabase);
+
+      router.push({ path: "/dashboard", query: {} });
+    } else {
       ElMessage({
-									     message: '用户名或密码不正确',
-									     type: 'warning',
-									   })
+        message: "用户名或密码不正确",
+        type: "warning",
+      });
     }
-    
   } catch (error) {
     console.error(error);
   }
 
-  
   // loginFormRef.value.validate((valid: boolean) => {
   //   if (valid) {
   //     loading.value = true;
@@ -395,7 +411,6 @@ function handleLogin0() {
   });
 }
 
-
 /**
  * 主题切换
  */
@@ -428,7 +443,7 @@ function checkCapslock(event: KeyboardEvent) {
 }
 
 onMounted(() => {
-  console.log("mounted")
+  console.log("mounted");
   //getCaptcha();
 });
 </script>
@@ -440,12 +455,14 @@ html.dark .login-container {
 
 .login-container {
   overflow-y: auto;
-  background: url("@/assets/images/login-bg.jpg") no-repeat center right;
-
-  //@apply wh-full flex-center;
-
+  background: url("@/assets/images/login-bg.svg") no-repeat center right;
+  @apply wh-full flex-center;
+  flex-direction: column;
   .login-form {
     padding: 30px 10px;
+  }
+  img {
+    margin-bottom: 24px;
   }
 }
 
@@ -458,12 +475,12 @@ html.dark .login-container {
   display: block;
   // height: 400px;
   // width: 400px;
-    // vertical-align: top;
-    // margin-right: 0;
-    // border-style: none;
-    // position: relative;
-    z-index: 1000;
-	}
+  // vertical-align: top;
+  // margin-right: 0;
+  // border-style: none;
+  // position: relative;
+  z-index: 1000;
+}
 :deep(.el-input) {
   .el-input__wrapper {
     padding: 0;
