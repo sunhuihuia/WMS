@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { useSettingsStore, useUserStore } from "@/store";
-import { LoginData } from "@/api/auth/types";
 import { LocationQuery, LocationQueryValue, useRoute } from "vue-router";
-import router from "@/router";
-import { ThemeEnum } from "@/enums/ThemeEnum";
 import axios from "axios";
-import { sys } from "typescript";
+import { ElMessage } from 'element-plus'
 
 // Stores
 const userStore = useUserStore();
@@ -26,10 +23,10 @@ const SysInfo = ref({
   database: 'ufdata_002_2019',
   ApiUrl: '',
 })
-const loginData = ref<LoginData>({
+const loginData = ref({
   username: "demo",
   password: "",
-  password1: "",
+  password1: '',
   password2: "",
 });
 
@@ -89,41 +86,24 @@ const globalObject =
   instance?.appContext.config.globalProperties.$myGlobalObject;
 async function handleLogin() {
   try {
-    console.log(SqlWork);
-    const res = await axios.post(globalObject.ApiUrl,
-      {
-        "CommandType": "EditPwd", "database": SysInfo.value.database,
-        "cuser_id": SysInfo.value.cUserId, "cpasswordOld": loginData.value.password, "cpasswordNew": loginData.value.password1
-      });
+    if (loginData.value.password1 === loginData.value.password2) {
+      const res = await axios.post(globalObject.ApiUrl,
+        {
+          "CommandType": "EditPwd", "database": SysInfo.value.database,
+          "cuser_id": SysInfo.value.cUserId, "cpasswordOld": loginData.value.password, "cpasswordNew": loginData.value.password1
+        });
+    } else {
+      ElMessage({
+        message: '两次输入的新密码不一致',
+        type: 'error',
+        plain: true,
+      })
+    }
   } catch (error) {
     console.error(error);
   }
 }
 
-const SqlWork = async (CommandType: string, SqlsStr: string) => {
-
-  console.log(globalObject);
-
-  const res = await axios.post(globalObject.ApiUrl,
-    {
-      "CommandType": CommandType, "database": SysInfo.value.database,
-      "SqlsStr": SqlsStr
-    });
-  //console.log(res); 
-  //    this.tTable =res.data.dataDetail[0];
-  //   console.log(this.tTable);
-  return res
-
-}
-/**
- * 主题切换
- */
-
-const toggleTheme = () => {
-  const newTheme =
-    settingsStore.theme === ThemeEnum.DARK ? ThemeEnum.LIGHT : ThemeEnum.DARK;
-  settingsStore.changeTheme(newTheme);
-};
 /**
  * 根据屏幕宽度切换设备模式
  */
@@ -147,8 +127,6 @@ function checkCapslock(event: KeyboardEvent) {
 }
 
 onMounted(() => {
-  console.log("mounted");
-  //getCaptcha();
 });
 </script>
 
