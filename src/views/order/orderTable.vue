@@ -96,7 +96,7 @@ const determineClick =async () => {
     var sortid=(headerData.value.indexOf(item)+1);//重新计算序号
 
     SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+item.tname+"' tname, 'sort' itype,'"+item.field+"' cname,"+sortid+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
-    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+item.tname+"' tname, 'HeaderText' itype,'"+item.field+"' cname,"+item.name+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
+    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+item.tname+"' tname, 'HeaderText' itype,'"+item.field+"' cname,'"+item.name+"' cvalue,'"+SysInfo.value.cUserId+"'  hostname")
     SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+item.tname+"' tname, 'width' itype,'"+item.field+"' cname,"+item.width+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
     SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+item.tname+"' tname, 'visible' itype,'"+item.field+"' cname,"+item.sfxs+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
 
