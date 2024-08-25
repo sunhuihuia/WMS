@@ -144,7 +144,7 @@
     </el-form>
 
     <el-dialog v-model="dialogVisible" title="选择栏目" @close="dialogVisible = false" width="70%" :draggable="false">
-      <orderTable @close="dialogVisible = false" :headerData="headerData" />
+      <orderTable @close="dialogVisible = false" :headerData="headerData" :tname="tname" />
     </el-dialog>
   </div>
 </template>
@@ -207,6 +207,7 @@ export default {
       bodyData: [],
       bodyDataCopypolist_asn: [],
       headerData: [] as HeaderItem[],
+      tname:"puorder",
       pageNum_List: 1,
       pageSize_List: 10,
       loading: false,
@@ -239,7 +240,7 @@ export default {
   // },
   async mounted() {
     //let res = await this.SqlWork('select', "select * from wlzh_srm_cgdddz")
-    let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  'puorder', '"+ this.SysInfo.cUserId +"'")
+    let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '"+this.tname+"', '"+ this.SysInfo.cUserId +"'")
     this.headerData = res.data.dataDetail
 
   },
