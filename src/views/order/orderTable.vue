@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import axios from "axios";
+import { v4 as uuidv4, validate } from 'uuid';
 
 interface HeaderItem {
   defaultname: string;
@@ -88,7 +89,22 @@ const handleSelectionChange = (data: any, value: any) => {
 const closeClick = () => {
   emit('close')
 }
-const determineClick = () => {
+const determineClick =async () => {
+  var GID=uuidv4();
+  await headerData.value.forEach( 
+  (item:any)=>{
+    var sortid=(headerData.value.indexOf(item)+1);//重新计算序号
+
+    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+item.tname+"' tname, 'sort' itype,'"+item.field+"' cname,"+sortid+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
+    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+item.tname+"' tname, 'HeaderText' itype,'"+item.field+"' cname,"+item.name+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
+    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+item.tname+"' tname, 'width' itype,'"+item.field+"' cname,"+item.width+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
+    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+item.tname+"' tname, 'visible' itype,'"+item.field+"' cname,"+item.sfxs+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
+
+  }
+  )
+  SqlWork("update","wlzh_PrintsettingDeal '"+GID+"'")
+
+
 }
 
 const SqlWork = async (CommandType: string, SqlsStr: string) => {

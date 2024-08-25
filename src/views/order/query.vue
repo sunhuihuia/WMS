@@ -238,7 +238,8 @@ export default {
 
   // },
   async mounted() {
-    let res = await this.SqlWork('select', "select * from wlzh_srm_cgdddz")
+    //let res = await this.SqlWork('select', "select * from wlzh_srm_cgdddz")
+    let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  'puorder', '"+ this.SysInfo.cUserId +"'")
     this.headerData = res.data.dataDetail
 
   },
