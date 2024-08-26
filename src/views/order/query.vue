@@ -144,7 +144,7 @@
     </el-form>
 
     <el-dialog v-model="dialogVisible" title="选择栏目" @close="dialogVisible = false" width="70%" :draggable="false">
-      <orderTable @close="dialogVisible = false" :headerData="headerData" />
+      <orderTable @determine="determine" @close="dialogVisible = false" :headerData="headerData" />
     </el-dialog>
   </div>
 </template>
@@ -239,7 +239,7 @@ export default {
   // },
   async mounted() {
     //let res = await this.SqlWork('select', "select * from wlzh_srm_cgdddz")
-    let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  'puorder', '"+ this.SysInfo.cUserId +"'")
+    let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  'puorder', '" + this.SysInfo.cUserId + "'")
     this.headerData = res.data.dataDetail
 
   },
@@ -299,6 +299,9 @@ export default {
       let res = await this.SqlWork('select', "select * from wlzh_srm_cgdddz")
       this.headerData = res.data.dataDetail
       this.dialogVisible = true;
+    },
+    determine() {
+
     }
   },
 }
