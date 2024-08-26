@@ -52,7 +52,7 @@
           <div class="grid-content ep-bg-purple-light">
             <el-form-item label="订货日期:">
               <el-date-picker v-model="filters.dPODate" format="YYYY/MM/DD" value-format="YYYY-MM-DD" placeholder="选择日期"
-                type="date" unlink-panels range-separator="To" @change="dPODateChange" />
+                type="date" unlink-panels range-separator="To" />
             </el-form-item>
           </div>
         </el-col>
@@ -97,7 +97,7 @@
         <el-col :span="16" class="el-col">
 
           <el-button @click="loadData" type="primary"> <span>查询</span></el-button>
-          <el-button type="info "> <span>重置</span></el-button>
+          <el-button @click="resetClick" type="info"> <span>重置</span></el-button>
           <el-button type="danger"> <span>打印</span></el-button>
 
           <el-dropdown @command="handleDaochu" trigger="click"><el-button type="default" style="margin-left: 10px;">
@@ -105,7 +105,7 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item command="全部">全部</el-dropdown-item>
+                <!-- <el-dropdown-item command="全部">全部</el-dropdown-item> -->
                 <el-dropdown-item command="选中">选中</el-dropdown-item>
                 <el-dropdown-item command="本页">本页</el-dropdown-item>
               </el-dropdown-menu>
@@ -115,7 +115,7 @@
 
         </el-col>
         <el-col :span="2" class="el-col">
-          <el-button @click="dialogVisibleClick" class type="text">选择栏目</el-button>
+          <el-button @click="dialogVisibleClick" class text type='primary'>选择栏目</el-button>
         </el-col>
       </el-row>
       <el-row class="el-row">
@@ -144,7 +144,7 @@
     </el-form>
 
     <el-dialog v-model="dialogVisible" title="选择栏目" @close="dialogVisible = false" width="70%" :draggable="false">
-      <orderTable @close="dialogVisible = false" :headerData="headerData" :tname="tname" />
+      <orderTable @determine="determine" @close="dialogVisible = false" :headerData="headerData1" :tame="tname" />
     </el-dialog>
   </div>
 </template>
@@ -159,6 +159,9 @@ import { ElMessage, ElLoading } from 'element-plus'
 import { fa } from 'element-plus/es/locale';
 import { stringify } from 'querystring';
 import orderTable from './orderTable.vue'
+import { Excel } from '@/utils/exportExcel';
+import { List } from 'echarts';
+
 export default {
   components: {
     orderTable
@@ -207,7 +210,7 @@ export default {
       bodyData: [],
       bodyDataCopypolist_asn: [],
       headerData: [] as HeaderItem[],
-      tname:"puorder",
+      tname: "orderQuery",
       pageNum_List: 1,
       pageSize_List: 10,
       loading: false,
@@ -216,6 +219,7 @@ export default {
       bodymultipleSelection: [],
       ElSelectLoading: false,
       ElSelectValue: '',
+      headerData1: [] as HeaderItem[],
       ElSelectOptions: [{ value: '', label: '' }],
       fullscreenLoading: false,
       zhuangtaiList: [{ value: '1', label: '已确认' }, { value: '0', label: '未确认' }, { value: '', label: '全部' }],
@@ -233,16 +237,9 @@ export default {
     };
   },
 
-  // async mounted(){
-  //   console.log('mounted')
-  //   const res = await this.SqlWork("select","select null a,2 b" );
 
-  // },
-  async mounted() {
-    //let res = await this.SqlWork('select', "select * from wlzh_srm_cgdddz")
-    let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '"+this.tname+"', '"+ this.SysInfo.cUserId +"'")
-    this.headerData = res.data.dataDetail
-
+  mounted() {
+    this.handle()
   },
 
   methods: {
@@ -262,15 +259,42 @@ export default {
         console.error(error);
       }
     },
-    dPODateChange(start: any, end: any) {
-      console.log(111111, start);
 
-    },
-    handleDaochu(command: string) {
-      ElMessage(`click on item ${command}`)
+    handleDaochu() {
+      const data = [
+        // 表格数据
+        ['姓名', '年龄', '职业'],
+        ['Alice', 28, '前端开发'],
+        ['Bob', 22, '后端开发']
+      ];
+      const excel = new Excel();
+      excel.exportExcel({
+        name: '订单',
+        // title: '表格标题',加入这个标题会导致导出的表格再次导入时数据key值获取不正确
+        data: data,
+        header: [],
+        customHeader: []
+      })
+
     },
     handleSelectionChange() {
 
+    },
+    async handle() {
+      try {
+        let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '" + this.tname + "', '" + this.SysInfo.cUserId + "'")
+        const list: any[] = []
+        res.data.dataDetail.forEach((element: any) => {
+          if (element.sfxs == 1) {
+            list.push(element)
+          }
+        })
+        this.headerData = list.sort((a: any, b: any) => Number(a.sortid) - Number(b.sortid));
+        console.log(this.headerData);
+
+      } catch (error) {
+
+      }
     },
     async loadData() {
       try {
@@ -297,12 +321,19 @@ export default {
       this.loadData();
     },
     async dialogVisibleClick() {
-      let res = await this.SqlWork('select', "select * from wlzh_srm_cgdddz")
-      this.headerData = res.data.dataDetail
+      let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '" + this.tname + "', '" + this.SysInfo.cUserId + "'")
+      this.headerData1 = res.data.dataDetail.sort((a: any, b: any) => Number(a.sortid) - Number(b.sortid));
       this.dialogVisible = true;
     },
-    determine() {
-
+    async determine() {
+      this.handle()
+      this.loadData()
+      this.dialogVisible = false;
+    },
+    resetClick() {
+      this.filters = { cPOID: '', cVenName: '', cVenInvCode: '', cVenInvName: '', cState: '', dPODate: '', dArriveDate: '', isconfirmtime: '', guanbi: '' }
+      this.handle()
+      this.loadData()
     }
   },
 }

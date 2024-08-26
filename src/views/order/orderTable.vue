@@ -8,7 +8,11 @@ interface HeaderItem {
 }
 const tableData = ref([
   {
-    label: "栏目",
+    label: "栏目字段",
+    name: 'field'
+  },
+  {
+    label: "显示字段",
     name: 'name'
   },
   {
@@ -16,10 +20,11 @@ const tableData = ref([
     name: 'width'
   },
 ])
-const props = defineProps<{ headerData: HeaderItem[],tname:"" }>();
+const props = defineProps<{ headerData: HeaderItem[], tame: string }>();
 const headerData = ref(JSON.parse(JSON.stringify(props.headerData)))
-const tname=ref(props.tname);
+const tname = ref(props.tame);
 const userListRef = ref()
+
 const instance = getCurrentInstance();
 const globalObject =
   instance?.appContext.config.globalProperties.$myGlobalObject;
@@ -29,9 +34,9 @@ const SysInfo = ref({
   database: 'UFDATA_905_2021',
   ApiUrl: '',
 })
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'determine']);
+console.log(headerData.value);
 
-const selectedRows: Ref<never[]> = ref([]);
 nextTick(() => {
   console.log(userListRef);
   const list = []
@@ -87,26 +92,33 @@ const handleBottom = (index: any, data: any) => {
 const handleSelectionChange = (data: any, value: any) => {
   value.sfxs = value.sfxs == 0 ? 1 : 0
 }
+const toggleAllSelection = (data: any, value: any) => {
+  if (data.length == headerData.value.length) {
+    headerData.value.forEach((item: any) => {
+      item.sfxs = 1;
+    });
+  } else if (data.length == 0) {
+    headerData.value.forEach((item: any) => {
+      item.sfxs = 0;
+    });
+  }
+}
+
 const closeClick = () => {
   emit('close')
 }
 const determineClick = async () => {
-  var GID = uuidv4();
-  await headerData.value.forEach(
-    (item: any) => {
-      var sortid = (headerData.value.indexOf(item) + 1);//重新计算序号
-
-    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+tname+"' tname, 'sort' itype,'"+item.field+"' cname,"+sortid+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
-    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+tname+"' tname, 'HeaderText' itype,'"+item.field+"' cname,'"+item.name+"' cvalue,'"+SysInfo.value.cUserId+"'  hostname")
-    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+tname+"' tname, 'width' itype,'"+item.field+"' cname,"+item.width+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
-    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+tname+"' tname, 'visible' itype,'"+item.field+"' cname,"+item.sfxs+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
-
-    }
-  )
-  SqlWork("update", "wlzh_PrintsettingDeal '" + GID + "'")
-
-
-}
+  const GID = uuidv4(); // 将所有插入操作转换为 Promise 数组 
+  const promises = headerData.value.map(async (item: any) => {
+    console.log(item.sfxs, 11111);
+    const sortid = (headerData.value.indexOf(item) + 1); // 重新计算序号 
+    await SqlWork("update", "insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname) select '" + GID + "','" + tname.value + "' tname, 'sort' itype,'" + item.field + "' cname," + sortid + " cvalue,'" + SysInfo.value.cUserId + "' hostname"); await SqlWork("update", "insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname) select '" + GID + "','" + tname.value + "' tname, 'HeaderText' itype,'" + item.field + "' cname,'" + item.name + "' cvalue,'" + SysInfo.value.cUserId + "' hostname"); await SqlWork("update", "insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname) select '" + GID + "','" + tname.value + "' tname, 'width' itype,'" + item.field + "' cname," + item.width + " cvalue,'" + SysInfo.value.cUserId + "' hostname"); await SqlWork("update", "insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname) select '" + GID + "','" + tname.value + "' tname, 'visible' itype,'" + item.field + "' cname," + item.sfxs + " cvalue,'" + SysInfo.value.cUserId + "' hostname");
+  });
+  // 等待所有插入操作完成 
+  await Promise.all(promises); // 执行最后的操作 
+  await SqlWork("update", "wlzh_PrintsettingDeal '" + GID + "'");
+  emit('determine')
+};
 
 const SqlWork = async (CommandType: string, SqlsStr: string) => {
   try {
@@ -124,12 +136,12 @@ const SqlWork = async (CommandType: string, SqlsStr: string) => {
 
 <template>
   <div style="padding-bottom: 80px;">
-    <el-table :data="headerData" ref="userListRef" @select="handleSelectionChange">
+    <el-table :data="headerData" @selection-change="toggleAllSelection" ref="userListRef"
+      @select="handleSelectionChange">
       <el-table-column type="selection" width="55" />
-      <el-table-column sortable="custom" v-for="(item, index) in tableData" :prop="item.name" :key="index"
-        :label="item.label">
+      <el-table-column v-for="(item, index) in tableData" :prop="item.name" :key="index" :label="item.label">
         <template #default="scope">
-          <el-input v-model="scope.row[item.name]" />
+          <el-input :disabled="item.name == 'field'" v-model="scope.row[item.name]" />
         </template>
       </el-table-column>
       <el-table-column label="位置">
