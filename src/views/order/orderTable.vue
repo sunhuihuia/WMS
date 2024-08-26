@@ -16,8 +16,9 @@ const tableData = ref([
     name: 'width'
   },
 ])
-const props = defineProps<{ headerData: HeaderItem[] }>();
+const props = defineProps<{ headerData: HeaderItem[],tname:"" }>();
 const headerData = ref(JSON.parse(JSON.stringify(props.headerData)))
+const tname=ref(props.tname);
 const userListRef = ref()
 const instance = getCurrentInstance();
 const globalObject =
@@ -95,10 +96,10 @@ const determineClick = async () => {
     (item: any) => {
       var sortid = (headerData.value.indexOf(item) + 1);//重新计算序号
 
-      SqlWork("update", "insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" + GID + "','" + item.tname + "' tname, 'sort' itype,'" + item.field + "' cname," + sortid + " cvalue,'" + SysInfo.value.cUserId + "'  hostname")
-      SqlWork("update", "insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" + GID + "','" + item.tname + "' tname, 'HeaderText' itype,'" + item.field + "' cname," + item.name + " cvalue,'" + SysInfo.value.cUserId + "'  hostname")
-      SqlWork("update", "insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" + GID + "','" + item.tname + "' tname, 'width' itype,'" + item.field + "' cname," + item.width + " cvalue,'" + SysInfo.value.cUserId + "'  hostname")
-      SqlWork("update", "insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" + GID + "','" + item.tname + "' tname, 'visible' itype,'" + item.field + "' cname," + item.sfxs + " cvalue,'" + SysInfo.value.cUserId + "'  hostname")
+    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+tname+"' tname, 'sort' itype,'"+item.field+"' cname,"+sortid+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
+    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+tname+"' tname, 'HeaderText' itype,'"+item.field+"' cname,'"+item.name+"' cvalue,'"+SysInfo.value.cUserId+"'  hostname")
+    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+tname+"' tname, 'width' itype,'"+item.field+"' cname,"+item.width+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
+    SqlWork("update","insert into wlzh_PrintsettingTempTb(GID,tname,itype,cname,cvalue,hostname)  select '" +GID+ "','"+tname+"' tname, 'visible' itype,'"+item.field+"' cname,"+item.sfxs+" cvalue,'"+SysInfo.value.cUserId+"'  hostname")
 
     }
   )
