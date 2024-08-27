@@ -247,21 +247,23 @@ export default {
     },
 
     handleDaochu() {
-      const data = [
-        // 表格数据
-        ['姓名', '年龄', '职业'],
-        ['Alice', 28, '前端开发'],
-        ['Bob', 22, '后端开发']
-      ];
-      const excel = new Excel();
-      excel.exportExcel({
-        name: '订单',
-        // title: '表格标题',加入这个标题会导致导出的表格再次导入时数据key值获取不正确
-        data: data,
-        header: [],
-        customHeader: []
-      })
+      if (this.bodyDataCopypolist_asn.length) {
+        const customHeader: any = []
+        const header: any = []
+        this.headerData.forEach(element => {
+          header.push(element.defaultname)
+          customHeader.push(element.name)
+        });
 
+        const excel = new Excel();
+        excel.exportExcel({
+          name: '订单',
+          // title: '表格标题',加入这个标题会导致导出的表格再次导入时数据key值获取不正确
+          data: this.bodyDataCopypolist_asn,
+          header,
+          customHeader
+        })
+      }
     },
     handleSelectionChange() {
 
