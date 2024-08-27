@@ -51,7 +51,6 @@
 
         <el-button @click="loadData" type="primary"> <span>查询</span></el-button>
         <el-button type="info"> <span>重置</span></el-button>
-        <el-button type="danger"> <span>打印</span></el-button>
 
       </el-col>
       <el-col :span="2" class="el-col">
@@ -67,6 +66,15 @@
         </el-table-column>
         <el-table-column v-for="(item, index) in headerData" :prop="item.defaultname" :key="index" :width="item.width"
           :label="item.name">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span v-if="scope.column.property !== 'cPOID'" style="margin-left: 10px">{{
+                scope.row[`${scope.column.property}`] }}</span>
+              <el-button v-else @click="scopeclick(scope)" class text type='primary'>{{
+                scope.row[`${scope.column.property}`] }}</el-button>
+
+            </div>
+          </template>
         </el-table-column>
       </el-table>
 
@@ -79,14 +87,15 @@
         </el-pagination>
       </div>
     </el-row>
-
-
   </el-form>
   <div style="margin: 10px;">
 
 
     <el-dialog v-model="dialogVisible" title="选择栏目" @close="dialogVisible = false" width="70%" :draggable="false">
       <orderTable @determine="determine" @close="dialogVisible = false" :headerData="headerData" :tame="tname" />
+    </el-dialog>
+    <el-dialog v-model="dialogVisible1" title="订单确认" @close="dialogVisible = false" width="70%" :draggable="false">
+      <confirmDY @close="dialogVisible = false" :pVouchID="pVouchID" :filtersData="filters" :headerList="headerData" />
     </el-dialog>
   </div>
 </template>
@@ -97,19 +106,16 @@ import type { FormProps } from 'element-plus'
 import axios from "axios"
 import { getCurrentInstance } from 'vue';
 import type { HeaderItem } from './query'
-import { ElMessage, ElLoading } from 'element-plus'
-import { fa } from 'element-plus/es/locale';
-import { stringify } from 'querystring';
 import orderTable from './orderTable.vue'
+import confirmDY from './confirmDY.vue'
 export default {
   components: {
-    orderTable
+    orderTable,
+    confirmDY
   },
   setup() {
     const instance = getCurrentInstance();
     const globalObject = instance?.appContext.config.globalProperties.$myGlobalObject
-
-
     const labelPosition = ref<FormProps['labelPosition']>('right')
     const labelPosition2 = ref<FormProps['labelPosition']>('right')
     const formLabelAlign = reactive({
@@ -145,6 +151,8 @@ export default {
       testObj: { ddate: '' },
       tableData2: [],
       dialogVisible: false,
+      dialogVisible1: false,
+      pVouchID: '',
       filters: { cyzt: '', cVenName: '', dConfirmTime: '', qrzy: '', dPODate: '', dReadTime: '' },
       bodyData: [],
       bodyDataCopypolist_asn: [],
@@ -181,7 +189,13 @@ export default {
   },
 
   methods: {
+    scopeclick(data: any) {
+      console.log(data, 312312);
 
+      this.pVouchID = data.row.POID + ""
+      this.dialogVisible1 = true
+
+    },
     async SqlWork(CommandType: string, SqlsStr: string): Promise<any> {
       try {
         const res = await axios.post(this.globalObject.ApiUrl,
@@ -199,20 +213,20 @@ export default {
     },
 
     handleDaochu() {
-      const data = [
-        // 表格数据
-        ['姓名', '年龄', '职业'],
-        ['Alice', 28, '前端开发'],
-        ['Bob', 22, '后端开发']
-      ];
-      const excel = new Excel();
-      excel.exportExcel({
-        name: '订单',
-        // title: '表格标题',加入这个标题会导致导出的表格再次导入时数据key值获取不正确
-        data: data,
-        header: [],
-        customHeader: []
-      })
+      // const data = [
+      //   // 表格数据
+      //   ['姓名', '年龄', '职业'],
+      //   ['Alice', 28, '前端开发'],
+      //   ['Bob', 22, '后端开发']
+      // ];
+      // const excel = new Excel();
+      // excel.exportExcel({
+      //   name: '订单',
+      //   // title: '表格标题',加入这个标题会导致导出的表格再次导入时数据key值获取不正确
+      //   data: data,
+      //   header: [],
+      //   customHeader: []
+      // })
 
     },
     handleSelectionChange() {
@@ -240,7 +254,7 @@ export default {
         this.loading = true;
         let hangshu = await this.SqlWork("select", "select count(*) total from wlzh_pu_po_cgqr where userId='" + this.SysInfo.cUserId + "'")
         this.total_List = hangshu.data.dataDetail[0].total
-        let res = await this.SqlWork("select", `exec wlzh_pu_cgddxs '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${!this.filters.cyzt ? '' : `and cyzt=''${this.filters.cyzt}''`}${!this.filters.cVenName ? '' : `and cVenCode=''${this.filters.cVenName}''`}${!this.filters.dConfirmTime ? '' : `and dConfirmTime=''${this.filters.dConfirmTime}''`}${!this.filters.qrzy ? '' : `and qrzy=''${this.filters.qrzy}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dReadTime ? '' : `and dReadTime=''${this.filters.dReadTime}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
+        let res = await this.SqlWork("select", `exec wlzh_pu_cgddqr_list '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${!this.filters.cyzt ? '' : `and cyzt=''${this.filters.cyzt}''`}${!this.filters.cVenName ? '' : `and cVenCode=''${this.filters.cVenName}''`}${!this.filters.dConfirmTime ? '' : `and dConfirmTime=''${this.filters.dConfirmTime}''`}${!this.filters.qrzy ? '' : `and qrzy=''${this.filters.qrzy}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dReadTime ? '' : `and dReadTime=''${this.filters.dReadTime}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
         this.bodyDataCopypolist_asn = res.data.dataDetail
         this.loading = false;
       } catch (error) {
@@ -268,7 +282,7 @@ export default {
       this.dialogVisible = false;
     },
     resetClick() {
-      this.filters = { cPOID: '', cVenName: '', cVenInvCode: '', cVenInvName: '', cState: '', dPODate: '', dArriveDate: '', isconfirmtime: '', guanbi: '' }
+      this.filters = { cyzt: '', cVenName: '', dConfirmTime: '', qrzy: '', dPODate: '', dReadTime: '' }
       this.handle()
       this.loadData()
     }

@@ -98,21 +98,7 @@
 
           <el-button @click="loadData" type="primary"> <span>查询</span></el-button>
           <el-button @click="resetClick" type="info"> <span>重置</span></el-button>
-          <el-button type="danger"> <span>打印</span></el-button>
-
-          <el-dropdown @command="handleDaochu" trigger="click"><el-button type="default" style="margin-left: 10px;">
-              <span>导出</span><el-icon class="el-icon--right"><arrow-down /></el-icon>
-            </el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <!-- <el-dropdown-item command="全部">全部</el-dropdown-item> -->
-                <el-dropdown-item command="选中">选中</el-dropdown-item>
-                <el-dropdown-item command="本页">本页</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-
-
+          <el-button type="danger" @click="handleDaochu"> <span>导出</span></el-button>
         </el-col>
         <el-col :span="2" class="el-col">
           <el-button @click="dialogVisibleClick" class text type='primary'>选择栏目</el-button>

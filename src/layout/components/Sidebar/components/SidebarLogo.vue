@@ -26,7 +26,7 @@ defineProps({
   },
 });
 
-const logo = ref(new URL(`../../../../assets/logo.png`, import.meta.url).href);
+const logo = ref(new URL(`../../../../assets/logo.svg`, import.meta.url).href);
 </script>
 
 <style lang="scss" scoped>
@@ -41,7 +41,8 @@ const logo = ref(new URL(`../../../../assets/logo.png`, import.meta.url).href);
   }
 
   .logo-title {
-    flex-shrink: 0; /* 防止容器在空间不足时缩小 */
+    flex-shrink: 0;
+    /* 防止容器在空间不足时缩小 */
     margin-left: 10px;
     font-size: 14px;
     font-weight: bold;
