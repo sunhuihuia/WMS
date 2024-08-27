@@ -596,7 +596,7 @@ fiterBodyData() : any{
       const loading = ElLoading.service({lock: true,text: 'Loading',background: 'rgba(0, 0, 0, 0.7)',})
 
       if(this.bodyData.length==0){
-        this.$message({
+        this.ElMessage({
           message: '没有可保存的数据',
           type: 'warning'
         });
@@ -606,13 +606,13 @@ fiterBodyData() : any{
         await this.SqlWork("update","update wlzh_asntemp set GID='"+GID+"' where  cuser_id='"+this.SysInfo.cUserId+"' ")
         let res=await this.SqlWork("select","wlzh_ly_saveasn '"+GID+"' ")
         if (res.data.dataDetail[0].result=='1'){
-          this.$message({
+          this.ElMessage({
           message: '保存成功',
           type: 'success'
         });
         this.bodyData=[]
         }else{
-          this.$message({
+          this.ElMessage({
           message: res.data.dataDetail[0].cmsg,
           type: 'warning'
         });
