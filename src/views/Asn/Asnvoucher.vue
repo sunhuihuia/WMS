@@ -108,7 +108,7 @@
             <el-button @click="delRow"><el-icon>
                 <Delete style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>删行</span></el-button>
-            <el-button @click="save"><el-icon>
+            <el-button><el-icon>
                 <Memo style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>保存</span></el-button>
           </el-button-group>

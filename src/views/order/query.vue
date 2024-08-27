@@ -278,8 +278,6 @@ export default {
           }
         })
         this.headerData = list.sort((a: any, b: any) => Number(a.sortid) - Number(b.sortid));
-        console.log(this.headerData);
-
       } catch (error) {
 
       }
