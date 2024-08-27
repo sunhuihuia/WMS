@@ -459,11 +459,26 @@ export default {
   //   const res = await this.SqlWork("select","select null a,2 b" );
 
   // },
+  onMounted(){
+try {
+  console.log('AsnAddonMounted')
+    
+} catch (error) {
+  console.log('error', error)
+}
+    
+  },
   async mounted() {
-    console.log('mounted')
+    console.log('AsnAddmounted')
 
     const database = sessionStorage.getItem('cDatabase')
-    const cUserId = sessionStorage.getItem('loginData.value.username')
+    const cUserId = sessionStorage.getItem('username')    
+    const cVenCode = sessionStorage.getItem('cVenCode')
+
+    
+    console.log('database',database)
+    console.log('cUserId',cUserId)
+
     if (database != null)
       this.SysInfo.database = database
     else
@@ -473,8 +488,11 @@ export default {
     if (cUserId != null)
       this.SysInfo.cUserId = cUserId
 
-    console.log('this.SysInfo.database', this.SysInfo.database)
+      if (cVenCode != null)
+      this.SysInfo.cVenCode = cVenCode
+      
 
+    console.log('this.SysInfo.database', this.SysInfo.database)
     const loading = ElLoading.service({ lock: true, text: 'Loading', background: 'rgba(0, 0, 0, 0.7)', })
 
     let res = await this.SqlWork("select", "wlzh_ly_getAsntemp '" + this.SysInfo.cUserId + "' ");

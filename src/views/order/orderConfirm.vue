@@ -92,7 +92,7 @@
 
 
     <el-dialog v-model="dialogVisible" title="选择栏目" @close="dialogVisible = false" width="70%" :draggable="false">
-      <orderTable @determine="determine" @close="dialogVisible = false" :headerData="headerData" :tame="tname" />
+      <orderTable @determine="determine" @close="dialogVisible = false" :headerData="headerData" :tame="tname" :SysInfo="SysInfo" />
     </el-dialog>
     <el-dialog v-model="dialogVisible1" title="订单确认" @close="dialogVisible = false" width="70%" :draggable="false">
       <confirmDY @close="dialogVisible = false" :pVouchID="pVouchID" :filtersData="filters" :headerList="headerData" />
@@ -234,6 +234,23 @@ export default {
     },
     async handle() {
       try {
+        const database = sessionStorage.getItem('cDatabase')
+    const cUserId = sessionStorage.getItem('username')    
+    const cVenCode = sessionStorage.getItem('cVenCode')
+    console.log('database',database)
+    console.log('cUserId',cUserId)
+    if (database != null)
+      this.SysInfo.database = database
+    else
+      this.SysInfo.database = this.globalObject.database
+
+
+    if (cUserId != null)
+      this.SysInfo.cUserId = cUserId
+
+      if (cVenCode != null)
+      this.SysInfo.cVenCode = cVenCode
+
         let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '" + this.tname + "', '" + this.SysInfo.cUserId + "'")
         console.log(res.data.dataDetail);
         const list: any[] = []

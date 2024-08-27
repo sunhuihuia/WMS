@@ -13,9 +13,11 @@ export async function getUserInfoApi(): AxiosPromise<UserInfo> {
   // });
   // console.log('u',u)
   var  cuser_id= sessionStorage.getItem("username"  );
-  var test= await   request.post("http://shsd666.gnway.org:9999/NewWebApi/api/Values/Work2407",{"CommandType":"select","database":"master",
-                     "SqlsStr":"select 0 userId,u.cuser_id username,u.cuser_name nickname,r.role_code  from ufsystem..ua_user u join wlzh_srm..sys_user_role r on r.cuser_id=u.cuser_id where u.cuser_id='"+ cuser_id +"'" });
-  var role_code=test.data[0].role_code;
+  var  cDatabase= sessionStorage.getItem("cDatabase"  );
+  
+  var test= await   request.post("http://shsd666.gnway.org:9999/NewWebApi/api/Values/Work2407",{"CommandType":"select","database":cDatabase,
+                     "SqlsStr":"select 0 userId,u.cuser_id username,u.cuser_name nickname,r.roleId,b.cvencode  from ufsystem..ua_user u join SYSTEM_USER_ROLE r on r.userid=u.cuser_id join SYSTEM_USER_BASE b on b.userid=u.cUser_Id where u.cuser_id='"+ cuser_id +"'" });
+  var role_code=test.data[0].roleId;
   
                      var roles=role_code.split(",")
   test.data=test.data[0]

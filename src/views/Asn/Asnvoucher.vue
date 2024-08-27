@@ -342,7 +342,9 @@ export default {
 
     // this.VouchID=this.pVouchID;
     const database = sessionStorage.getItem('cDatabase')
-    const cUserId = sessionStorage.getItem('loginData.value.username')
+    const cUserId = sessionStorage.getItem('username')    
+    const cVenCode = sessionStorage.getItem('cVenCode')
+
     if (database != null)
       this.SysInfo.database = database
     else
@@ -351,6 +353,9 @@ export default {
 
     if (cUserId != null)
       this.SysInfo.cUserId = cUserId
+
+      if (cVenCode != null)
+      this.SysInfo.cVenCode = cVenCode
 
 
     // this.VouchID=1

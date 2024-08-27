@@ -345,10 +345,20 @@ export default {
     console.log('mounted')
 
     const database = sessionStorage.getItem('cDatabase')
+    const cUserId = sessionStorage.getItem('username')    
+    const cVenCode = sessionStorage.getItem('cVenCode')
+
     if (database != null)
       this.SysInfo.database = database
     else
       this.SysInfo.database = this.globalObject.database
+
+
+    if (cUserId != null)
+      this.SysInfo.cUserId = cUserId
+
+      if (cVenCode != null)
+      this.SysInfo.cVenCode = cVenCode
 
     console.log('this.SysInfo.database', this.SysInfo.database)
 

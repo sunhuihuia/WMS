@@ -20,7 +20,12 @@ const tableData = ref([
     name: 'width'
   },
 ])
-const props = defineProps<{ headerData: HeaderItem[], tame: string }>();
+const props = defineProps<{ headerData: HeaderItem[], tame: string,SysInfo:{
+  cUserId: 'demo',
+  cVenCode: '0080',
+  database: 'UFDATA_905_2021',
+  ApiUrl: '',
+} }>();
 const headerData = ref(JSON.parse(JSON.stringify(props.headerData)))
 const tname = ref(props.tame);
 const userListRef = ref()
@@ -28,12 +33,16 @@ const userListRef = ref()
 const instance = getCurrentInstance();
 const globalObject =
   instance?.appContext.config.globalProperties.$myGlobalObject;
-const SysInfo = ref({
-  cUserId: 'demo',
-  cVenCode: '0080',
-  database: 'UFDATA_905_2021',
-  ApiUrl: '',
-})
+// const SysInfo = ref({
+//   cUserId: 'demo',
+//   cVenCode: '0080',
+//   database: 'UFDATA_905_2021',
+//   ApiUrl: '',
+// })
+
+///通过props来传递用户信息
+const SysInfo = ref(JSON.parse(JSON.stringify(props.SysInfo)))
+
 const emit = defineEmits(['close', 'determine']);
 console.log(headerData.value);
 
