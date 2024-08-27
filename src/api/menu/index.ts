@@ -18,7 +18,7 @@ export async function listRoutes():AxiosPromise {
                          "SqlsStr":"select  id,parent_id,route_path as [path],component,route_name [name],[name] title,icon,cast((case when visible=0 then 1 else 0 end) as bit) as [hidden],cast(always_show as bit) always_show,cast(keep_alive as bit) keep_alive,igrade   from 	sys_menu order by tree_path" });
     console.log('Menu 获取菜单列表',Menu)
     var RoleMenu= await   request.post("http://shsd666.gnway.org:9999/NewWebApi/api/Values/Work2407",{"CommandType":"select","database":"wlzh_srm",
-                         "SqlsStr":"select a.menu_id,b.code from sys_role_menu a join sys_role b on a.role_id=b.id" });
+                         "SqlsStr":"select a.menu_id,a.role_code code from sys_role_menu a  " });
     Menu.data.forEach((element:any) => {
       var rms=[]
       rms=RoleMenu.data.filter((item:any)=> item.menu_id==element.id)

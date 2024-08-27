@@ -14,8 +14,10 @@ export async function getUserInfoApi(): AxiosPromise<UserInfo> {
   // console.log('u',u)
   var  cuser_id= sessionStorage.getItem("username"  );
   var test= await   request.post("http://shsd666.gnway.org:9999/NewWebApi/api/Values/Work2407",{"CommandType":"select","database":"master",
-                     "SqlsStr":"select 0 userId,cuser_id username,cuser_name nickname from ufsystem..ua_user where cuser_id='"+ cuser_id +"'" });
-  var roles=['vendor']
+                     "SqlsStr":"select 0 userId,u.cuser_id username,u.cuser_name nickname,r.role_code  from ufsystem..ua_user u join wlzh_srm..sys_user_role r on r.cuser_id=u.cuser_id where u.cuser_id='"+ cuser_id +"'" });
+  var role_code=test.data[0].role_code;
+  
+                     var roles=role_code.split(",")
   test.data=test.data[0]
   test.data.avatar="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201806%2F12%2F20180612131829_AyMHU.gif&refer=http%3A%2F%2Fb-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1722879995&t=81140e0b3f46e9c87b56d392ed081b3f"
   //"https://www.ncich.com.cn/d/file/content/2020/01/5e12d8f435613.gif"
