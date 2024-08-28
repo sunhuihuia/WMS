@@ -13,19 +13,19 @@ import "element-plus/theme-chalk/dark/css-vars.css";
 import "@/styles/index.scss";
 import "uno.css";
 import "animate.css";
-
+import { SqlWork } from "./utils/sqlwork";
 const app = createApp(App);
 
 // 使用一个对象设置多个全局变量
 app.config.globalProperties.$myGlobalObject = {
-  message: 'Hello, Vue 3!',
-  ApiUrl:'http://shsd666.gnway.org:9999/NewWebApi/api/Values/Work',
-  database:'ufdata_001_2021',
+  message: "Hello, Vue 3!",
+  ApiUrl: "http://shsd666.gnway.org:9999/NewWebApi/api/Values/Work",
+  database: "ufdata_001_2021",
   someMethod: () => {
     // 一些逻辑
-  }
+  },
 };
-
+app.config.globalProperties.$sqlWork = SqlWork;
 // 全局注册 自定义指令(directive)
 setupDirective(app);
 // 全局注册 状态管理(store)

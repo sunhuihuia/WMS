@@ -70,8 +70,9 @@
             <div style="display: flex; align-items: center">
               <span v-if="scope.column.property !== 'cPOID'" style="margin-left: 10px">{{
                 scope.row[`${scope.column.property}`] }}</span>
-              <el-button v-else @click="scopeclick(scope)" class text type='primary'>{{
-                scope.row[`${scope.column.property}`] }}</el-button>
+              <el-button v-else-if="scope.column.property === 'cPOID'" @click="scopeclick(scope)" class text
+                type='primary' bg>{{
+                  scope.row[`${scope.column.property}`] }}</el-button>
             </div>
           </template>
         </el-table-column>

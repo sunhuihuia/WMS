@@ -50,6 +50,7 @@ const SysInfo = ref(JSON.parse(JSON.stringify(props.SysInfo)))
 
 const emit = defineEmits(['close', 'determine']);
 console.log(headerData.value);
+console.log(instance?.appContext.config.globalProperties.sqlWork(), 1123123);
 
 nextTick(() => {
   console.log(userListRef);
