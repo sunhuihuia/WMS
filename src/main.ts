@@ -4,6 +4,7 @@ import router from "@/router";
 import { setupStore } from "@/store";
 import { setupDirective } from "@/directive";
 import { setupElIcons, setupI18n, setupPermission } from "@/plugins";
+import axios from "axios";
 
 // 本地SVG图标
 import "virtual:svg-icons-register";
@@ -13,7 +14,6 @@ import "element-plus/theme-chalk/dark/css-vars.css";
 import "@/styles/index.scss";
 import "uno.css";
 import "animate.css";
-import { SqlWork } from "./utils/sqlwork";
 const app = createApp(App);
 
 // 使用一个对象设置多个全局变量
@@ -25,7 +25,23 @@ app.config.globalProperties.$myGlobalObject = {
     // 一些逻辑
   },
 };
-app.config.globalProperties.$sqlWork = SqlWork;
+app.config.globalProperties.$sqlWork = async function async(
+  CommandType: any,
+  SqlsStr: any
+) {
+  const instance = getCurrentInstance();
+  const globalObject =
+    instance?.appContext.config.globalProperties.$myGlobalObject;
+  // 函数逻辑
+  const res = await axios.post(globalObject.ApiUrl, {
+    CommandType: CommandType,
+    database: app.config.globalProperties.$myGlobalObjec.database,
+    SqlsStr: SqlsStr,
+  });
+  return res;
+};
+console.log();
+
 // 全局注册 自定义指令(directive)
 setupDirective(app);
 // 全局注册 状态管理(store)
@@ -35,5 +51,6 @@ setupElIcons(app);
 // 国际化
 setupI18n(app);
 // 注册动态路由
+
 setupPermission();
 app.use(router).mount("#app");

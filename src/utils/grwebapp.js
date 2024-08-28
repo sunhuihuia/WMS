@@ -169,7 +169,7 @@ function webapp_ws_create(onopen) {
 
             //弹出alert提示信息，可修改为更适合的表述
             //alert("创建WebSocket失败，可能是‘WEB报表客户端程序’在本机没有安装，或在报表网页加载时没有调用‘webapp_urlprotocol_startup’函数进行启动。");
-            alert("创建WebSocket失败，可能是WEB报表客户端程序没有启动，或其在本机没有安装，请根据网页顶部的提示进行相应的操作。");
+            alert("创建WebSocket失败，可能是WEB报表客户端程序没有启动，或其在本机没有安装，请根据http://www.rubylong.cn/download/gridreport6-webapp.exe进行下载安装。");
 
             //在网页最前面加上提示下载的文字，可修改为更适合的表述与界面形式
             //newNode.innerHTML = '特别提示：<a href="' + _grwebapp_url + '">点击下载WEB报表客户端程序</a>，下载后双击下载的文件进行安装，安装完成后重新打开当前网页。';
