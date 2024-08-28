@@ -334,16 +334,21 @@ async function handleLogin() {
 
       let res3 = await axios.post(globalObject.ApiUrl, {"CommandType":"select","database":cDatabase,
                      "SqlsStr":"select 0 userId,u.cuser_id username,u.cuser_name nickname,r.roleId,b.cvencode  from ufsystem..ua_user u join SYSTEM_USER_ROLE r on r.userid=u.cuser_id join SYSTEM_USER_BASE b on b.userid=u.cUser_Id where u.cuser_id='"+ loginData.value.username +"'" });
-      if(res2.data.dataDetail.length>0){
+      if(res3.data.dataDetail.length>0){
         userStore.user.username = loginData.value.username;
         var tokenType = "Bearer";
         var accessToken = "11223344";
-        var cVenCode=res2.data.dataDetail[0].cvencode
+        var cVenCode=res3.data.dataDetail[0].cvencode
+        var role_code=res3.data.dataDetail[0].roleId.toString();  
+        var roles=role_code.split(",")
+        console.log('roles',roles)  
         localStorage.setItem("accessToken", tokenType + " " + accessToken); //Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
         console.log(loginData.value.username);
+        console.log('cVenCode',cVenCode)
         sessionStorage.setItem("username", loginData.value.username);
         sessionStorage.setItem("cDatabase", cDatabase);
         sessionStorage.setItem("cVenCode", cVenCode);
+        sessionStorage.setItem("roles", roles);
 
         router.push({ path: "/dashboard", query: {} });
     }else{

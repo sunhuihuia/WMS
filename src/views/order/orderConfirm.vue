@@ -179,7 +179,7 @@ export default {
       SysInfo:
       {
         cUserId: 'demo',
-        cVenCode: '0080',
+        cVenCode: '-1',
         database: 'UFDATA_905_2021',
         ApiUrl: '',
       },
@@ -210,6 +210,7 @@ export default {
     },
     async SqlWork(CommandType: string, SqlsStr: string): Promise<any> {
       try {
+        console.log(SqlsStr);
         const res = await axios.post(this.globalObject.ApiUrl,
           {
             "CommandType": CommandType, "database": this.SysInfo.database,
@@ -249,6 +250,7 @@ export default {
         const database = sessionStorage.getItem('cDatabase')
         const cUserId = sessionStorage.getItem('username')
         const cVenCode = sessionStorage.getItem('cVenCode')
+        var roles = sessionStorage.getItem('roles')
         console.log('database', database)
         console.log('cUserId', cUserId)
         if (database != null)
@@ -262,6 +264,11 @@ export default {
 
         if (cVenCode != null)
           this.SysInfo.cVenCode = cVenCode
+
+          if (roles==null) roles=''
+        if(  roles.includes('admin')  ) 
+            this.SysInfo.cVenCode=''
+
 
         let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '" + this.tname + "', '" + this.SysInfo.cUserId + "'")
         console.log(res.data.dataDetail);
@@ -281,9 +288,9 @@ export default {
     async loadData() {
       try {
         this.loading = true;
-        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_po_cgqr where  userId='${this.SysInfo.cUserId}' ${!this.filters.cyzt ? '' : `and cyzt='${this.filters.cyzt}'`}${!this.filters.cVenName ? '' : `and cVenCode like '%${this.filters.cVenName}%'`}${!this.filters.dConfirmTime ? '' : `and dConfirmTime='${this.filters.dConfirmTime}'`}${!this.cCode ? '' : `and cPOID='${this.cCode}'`}${!this.filters.qrzy ? '' : `and qrzy='${this.filters.qrzy}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dReadTime ? '' : `and dReadTime='${this.filters.dReadTime}'`}`)
+        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_po_cgqr where  userId='${this.SysInfo.cUserId}' ${this.SysInfo.cVenCode=='' ? '' : " and cVenCode='"+ this.SysInfo.cVenCode +"'"} ${!this.filters.cyzt ? '' : `and cyzt='${this.filters.cyzt}'`}${!this.filters.cVenName ? '' : `and cVenCode like '%${this.filters.cVenName}%'`}${!this.filters.dConfirmTime ? '' : `and dConfirmTime='${this.filters.dConfirmTime}'`}${!this.cCode ? '' : `and cPOID='${this.cCode}'`}${!this.filters.qrzy ? '' : `and qrzy='${this.filters.qrzy}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dReadTime ? '' : `and dReadTime='${this.filters.dReadTime}'`}`)
         this.total_List = hangshu.data.dataDetail[0].total
-        let res = await this.SqlWork("select", `exec wlzh_pu_cgddqr_list '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${!this.filters.cyzt ? '' : `and cyzt=''${this.filters.cyzt}''`}${!this.filters.cVenName ? '' : `and cVenCode like ''%${this.filters.cVenName}%''`}${!this.filters.dConfirmTime ? '' : `and dConfirmTime=''${this.filters.dConfirmTime}''`}${!this.filters.qrzy ? '' : `and qrzy=''${this.filters.qrzy}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dReadTime ? '' : `and dReadTime=''${this.filters.dReadTime}''`}${!this.cCode ? '' : `and cPOID=''${this.cCode}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
+        let res = await this.SqlWork("select", `exec wlzh_pu_cgddqr_list '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${this.SysInfo.cVenCode=='' ? '' : " and cVenCode=''"+ this.SysInfo.cVenCode +"''"} ${!this.filters.cyzt ? '' : `and cyzt=''${this.filters.cyzt}''`}${!this.filters.cVenName ? '' : `and cVenCode like ''%${this.filters.cVenName}%''`}${!this.filters.dConfirmTime ? '' : `and dConfirmTime=''${this.filters.dConfirmTime}''`}${!this.filters.qrzy ? '' : `and qrzy=''${this.filters.qrzy}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dReadTime ? '' : `and dReadTime=''${this.filters.dReadTime}''`}${!this.cCode ? '' : `and cPOID=''${this.cCode}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
         this.bodyDataCopypolist_asn = res.data.dataDetail
         this.loading = false;
       } catch (error) {

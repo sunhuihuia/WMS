@@ -216,7 +216,7 @@ export default {
       SysInfo:
       {
         cUserId: 'demo',
-        cVenCode: '0080',
+        cVenCode: '-1',
         database: 'UFDATA_905_2021',
         ApiUrl: '',
       },
@@ -233,6 +233,7 @@ export default {
 
     async SqlWork(CommandType: string, SqlsStr: string): Promise<any> {
       try {
+        console.log(SqlsStr);
         const res = await axios.post(this.globalObject.ApiUrl,
           {
             "CommandType": CommandType, "database": this.SysInfo.database,
@@ -274,6 +275,7 @@ export default {
         const database = sessionStorage.getItem('cDatabase')
         const cUserId = sessionStorage.getItem('username')
         const cVenCode = sessionStorage.getItem('cVenCode')
+        var roles = sessionStorage.getItem('roles')
         console.log('database', database)
         console.log('cUserId', cUserId)
         if (database != null)
@@ -287,6 +289,10 @@ export default {
 
         if (cVenCode != null)
           this.SysInfo.cVenCode = cVenCode
+
+          if (roles==null) roles=''
+        if(  roles.includes('admin')  ) 
+            this.SysInfo.cVenCode=''
 
         let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '" + this.tname + "', '" + this.SysInfo.cUserId + "'")
         const list: any[] = []
@@ -303,11 +309,11 @@ export default {
     async loadData() {
       try {
         this.loading = true;
-        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_cgqr where userId='${this.SysInfo.cUserId}' ${!this.filters.cPOID ? '' : `and cPOID like '%${this.filters.cPOID}%'`}${!this.filters.cVenName ? '' : `and cVenCode like '%${this.filters.cVenName}%'`}${!this.filters.cVenInvCode ? '' : `and cInvCode like '%${this.filters.cVenInvCode}%'`}${!this.filters.cVenInvName ? '' : `and cInvName like '%${this.filters.cVenInvName}%'`}${!this.filters.cState ? '' : `and cState='${this.filters.cState}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dArriveDate ? '' : `and dArriveDate='${this.filters.dArriveDate}'`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime='${this.filters.isconfirmtime}'`}${!this.filters.guanbi ? '' : `and isclose='${this.filters.guanbi}'`}`)
+        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_cgqr where userId='${this.SysInfo.cUserId}' ${this.SysInfo.cVenCode=='' ? "" :" and cvencode='" + this.SysInfo.cVenCode + "'" }   ${!this.filters.cPOID ? '' : `and cPOID like '%${this.filters.cPOID}%'`}${!this.filters.cVenName ? '' : `and cVenCode like '%${this.filters.cVenName}%'`}${!this.filters.cVenInvCode ? '' : `and cInvCode like '%${this.filters.cVenInvCode}%'`}${!this.filters.cVenInvName ? '' : `and cInvName like '%${this.filters.cVenInvName}%'`}${!this.filters.cState ? '' : `and cState='${this.filters.cState}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dArriveDate ? '' : `and dArriveDate='${this.filters.dArriveDate}'`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime='${this.filters.isconfirmtime}'`}${!this.filters.guanbi ? '' : `and isclose='${this.filters.guanbi}'`}`)
         this.total_List = hangshu.data.dataDetail[0].total
         // this.total_List = hangshu.dataDetail[0]
 
-        let res = await this.SqlWork("select", `exec wlzh_pu_cgddxs '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${!this.filters.cPOID ? '' : `and cPOID like ''%${this.filters.cPOID}%''`}${!this.filters.cVenName ? '' : `and cVenCode like ''%${this.filters.cVenName}%''`}${!this.filters.cVenInvCode ? '' : `and cInvCode like ''%${this.filters.cVenInvCode}%''`}${!this.filters.cVenInvName ? '' : `and cInvName like ''%${this.filters.cVenInvName}%''`}${!this.filters.cState ? '' : `and cState=''${this.filters.cState}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dArriveDate ? '' : `and dArriveDate=''${this.filters.dArriveDate}''`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime=''${this.filters.isconfirmtime}''`}${!this.filters.guanbi ? '' : `and isclose=''${this.filters.guanbi}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
+        let res = await this.SqlWork("select", `exec wlzh_pu_cgddxs '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${!this.filters.cPOID ? '' : `and cPOID like ''%${this.filters.cPOID}%''`} ${this.SysInfo.cVenCode=='' ? "" :" and cvencode=''" + this.SysInfo.cVenCode + "''" } ${!this.filters.cVenName ? '' : `and cVenCode like ''%${this.filters.cVenName}%''`}${!this.filters.cVenInvCode ? '' : `and cInvCode like ''%${this.filters.cVenInvCode}%''`}${!this.filters.cVenInvName ? '' : `and cInvName like ''%${this.filters.cVenInvName}%''`}${!this.filters.cState ? '' : `and cState=''${this.filters.cState}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dArriveDate ? '' : `and dArriveDate=''${this.filters.dArriveDate}''`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime=''${this.filters.isconfirmtime}''`}${!this.filters.guanbi ? '' : `and isclose=''${this.filters.guanbi}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
         this.bodyDataCopypolist_asn = res.data.dataDetail
         this.loading = false;
       } catch (error) {

@@ -108,7 +108,7 @@
             <el-button @click="delRow"><el-icon>
                 <Delete style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>删行</span></el-button>
-            <el-button><el-icon>
+            <el-button @click="save"><el-icon>
                 <Memo style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>保存</span></el-button>
           </el-button-group>
@@ -457,7 +457,17 @@ export default {
       this.ElSelectOptions = res.data.dataDetail;
 
     },
-
+    async save(){
+      try {
+        const promises = this.bodyData.map(async (item: any) => {    
+          await this.SqlWork("update", "insert into wlzh_asnUpdateTemp() set bqty=" + item.iquantity + ",ctmemo='" + item.cmemo + "' where  id=" + item.id + " ")
+         });
+  // 等待所有循环操作完成 
+      await Promise.all(promises); // 执行最后的操作 
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
 
     fiterBodyData(): any {

@@ -329,9 +329,10 @@ export default {
       SysInfo:
       {
         cUserId: 'demo',
-        cVenCode: '0080',
+        cVenCode: '-1',
         database: 'ufdata_002_2019',
         ApiUrl: '',
+        roles:''
       },
 
     };
@@ -347,6 +348,7 @@ export default {
     const database = sessionStorage.getItem('cDatabase')
     const cUserId = sessionStorage.getItem('username')    
     const cVenCode = sessionStorage.getItem('cVenCode')
+    var roles = sessionStorage.getItem('roles')
 
     if (database != null)
       this.SysInfo.database = database
@@ -360,7 +362,15 @@ export default {
       if (cVenCode != null)
       this.SysInfo.cVenCode = cVenCode
 
+      if (roles==null) roles=''
+
     console.log('this.SysInfo.database', this.SysInfo.database)
+    console.log('this.SysInfo.cUserId', this.SysInfo.cUserId)
+    console.log('this.SysInfo.cVenCode', this.SysInfo.cVenCode)
+    console.log('roles', roles)
+
+    if(  roles.includes('admin')  ) 
+    this.SysInfo.cVenCode=''
 
     // const loading = ElLoading.service({lock: true,text: 'Loading',background: 'rgba(0, 0, 0, 0.7)',})
 

@@ -832,10 +832,16 @@ try {
 
       try {
 
-
-        this.bodyData.forEach(async (item: any) => {
+        // this.bodyData.forEach(async (item: any) => {
+        //   await this.SqlWork("update", "update wlzh_asntemp set bqty=" + item.iquantity + ",ctmemo='" + item.cmemo + "' where  id=" + item.id + " ")
+        // });
+        const promises = this.bodyData.map(async (item: any) => {    
           await this.SqlWork("update", "update wlzh_asntemp set bqty=" + item.iquantity + ",ctmemo='" + item.cmemo + "' where  id=" + item.id + " ")
-        });
+         });
+  // 等待所有循环操作完成 
+  await Promise.all(promises); // 执行最后的操作 
+
+        
         var GID = uuidv4();
         await this.SqlWork("update", "update wlzh_asntemp set GID='" + GID + "',cHeadMemo='" + this.headerData.cheadmemo + "'" + (this.headerData.fahuori && this.headerData.fahuori != '' ? ",fahuori='" + this.headerData.fahuori + "'" : "") + (this.headerData.yujidaohuori && this.headerData.yujidaohuori != '' ? ",yujidaohuori='" + this.headerData.yujidaohuori + "'" : "") + "     where  cuser_id='" + this.SysInfo.cUserId + "' ")
 
