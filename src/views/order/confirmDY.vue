@@ -1,6 +1,7 @@
 <template>
   <div style="margin: 10px;">
-    <el-form :label-position="labelPosition2" label-width="auto" :model="filters" style="max-width: 100%">
+    <el-form :label-position="labelPosition2" label-width="auto" :model="filters"
+      style="max-width: 100%;padding-bottom: 80px">
       <el-row class="el-row">
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
@@ -81,6 +82,10 @@
           </el-pagination>
         </div>
       </el-row>
+      <div style="margin-top: 24px;display: inline-block;float: right;">
+        <el-button @click="closeClick">取消</el-button>
+        <el-button @click="determineClick" type="primary">确认</el-button>
+      </div>
     </el-form>
 
 
@@ -176,6 +181,7 @@ export default {
       return [start, end];
     }
 
+
     const getThisMonth = () => {
       const today = new Date();
       const firstDayOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -237,15 +243,6 @@ export default {
       zhuangtaiList: [{ value: '1', label: '已确认' }, { value: '0', label: '未确认' }, { value: '', label: '全部' }],
       guanbiList: [{ value: '1', label: '已查阅' }, { value: '0', label: '未查阅' }],
       VouchID: '',
-      SysInfo:
-      {
-        cUserId: 'demo',
-        cVenCode: '0080',
-        database: 'UFDATA_905_2021',
-        ApiUrl: '',
-      },
-
-
     };
   },
   props: {
@@ -253,7 +250,8 @@ export default {
     pVouchID: String,
     filtersData: Object,
     headerList: Array,
-
+    cCode: String,
+    SysInfo: Object,
   },
 
 
@@ -279,10 +277,12 @@ export default {
   methods: {
     async loadData() {
       try {
+        console.log(this.SysInfo);
+
         this.loading = true;
-        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_po_cgqr where userId='${this.SysInfo.cUserId}' and POID='${this.pVouchID}'`)
+        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_po_cgqr where userId='${this.SysInfo?.cUserId}' and POID='${this.pVouchID}'`)
         this.total_List = hangshu.data.dataDetail[0].total
-        let res = await this.SqlWork("select", `exec wlzh_pu_cgddqr_list 'and userId=''${this.SysInfo.cUserId}'' and POID=''${this.pVouchID}''' ,${this.pageSize_List},${this.pageNum_List}`)
+        let res = await this.SqlWork("select", `exec wlzh_pu_cgddqr_list 'and userId=''${this.SysInfo?.cUserId}'' and POID=''${this.pVouchID}''' ,${this.pageSize_List},${this.pageNum_List}`)
         this.bodyDataCopypolist_asn = res.data.dataDetail
         this.loading = false;
       } catch (error) {
@@ -293,7 +293,7 @@ export default {
         console.log(SqlsStr);
         const res = await axios.post(this.globalObject.ApiUrl,
           {
-            "CommandType": CommandType, "database": this.SysInfo.database,
+            "CommandType": CommandType, "database": this.SysInfo?.database,
             "SqlsStr": SqlsStr
           });
         //console.log(res); 
@@ -339,7 +339,14 @@ export default {
 
     },
 
+    closeClick() {
+      this.$emit('close')
+    },
+    async determineClick() {
+      await this.SqlWork("update", `wlzh_pu_order_qr ${this.pVouchID} ,${this.SysInfo?.cUserId}`);
 
+      this.$emit('determine')
+    },
     async HandleSelectChange_ElSelect() {
       this.ElSelectLoading = true
       let res = await this.SqlWork("select", "select distinct b.cAcc_Id value, '['+b.cAcc_Id+']'+b.cAcc_Name label from  UFSystem..UA_Account b")

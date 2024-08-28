@@ -6,6 +6,12 @@ interface HeaderItem {
   defaultname: string;
   name: string;
 }
+interface SysInfoType {
+  cUserId: string;
+  cVenCode: string;
+  database: string;
+  ApiUrl: string;
+}
 const tableData = ref([
   {
     label: "栏目字段",
@@ -20,12 +26,11 @@ const tableData = ref([
     name: 'width'
   },
 ])
-const props = defineProps<{ headerData: HeaderItem[], tame: string,SysInfo:{
-  cUserId: 'demo',
-  cVenCode: '0080',
-  database: 'UFDATA_905_2021',
-  ApiUrl: '',
-} }>();
+const props = defineProps<{
+  headerData: HeaderItem[];
+  tame: string;
+  SysInfo: SysInfoType;
+}>();
 const headerData = ref(JSON.parse(JSON.stringify(props.headerData)))
 const tname = ref(props.tame);
 const userListRef = ref()

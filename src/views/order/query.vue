@@ -41,8 +41,8 @@
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
             <el-form-item label="确认状态:">
-              <el-select v-model="filters.cState" placeholder="选择状态" :loading="ElSelectLoading" style="width: 100%"
-                name="caccid">
+              <el-select v-model="filters.isconfirmtime" placeholder="选择状态" :loading="ElSelectLoading"
+                style="width: 100%" name="caccid">
                 <el-option v-for="item in zhuangtaiList" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
@@ -72,8 +72,8 @@
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
             <el-form-item label="订单状态:">
-              <el-select v-model="filters.isconfirmtime" placeholder="选择状态" :loading="ElSelectLoading"
-                style="width: 100%" name="caccid">
+              <el-select v-model="filters.cState" placeholder="选择状态" :loading="ElSelectLoading" style="width: 100%"
+                name="caccid">
                 <el-option v-for="item in dindanList" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
@@ -130,7 +130,8 @@
     </el-form>
 
     <el-dialog v-model="dialogVisible" title="选择栏目" @close="dialogVisible = false" width="70%" :draggable="false">
-      <orderTable @determine="determine" @close="dialogVisible = false" :headerData="headerData1" :tame="tname" :SysInfo="SysInfo"/>
+      <orderTable @determine="determine" @close="dialogVisible = false" :headerData="headerData1" :tame="tname"
+        :SysInfo="SysInfo" />
     </el-dialog>
   </div>
 </template>
@@ -271,21 +272,21 @@ export default {
     async handle() {
       try {
         const database = sessionStorage.getItem('cDatabase')
-    const cUserId = sessionStorage.getItem('username')    
-    const cVenCode = sessionStorage.getItem('cVenCode')
-    console.log('database',database)
-    console.log('cUserId',cUserId)
-    if (database != null)
-      this.SysInfo.database = database
-    else
-      this.SysInfo.database = this.globalObject.database
+        const cUserId = sessionStorage.getItem('username')
+        const cVenCode = sessionStorage.getItem('cVenCode')
+        console.log('database', database)
+        console.log('cUserId', cUserId)
+        if (database != null)
+          this.SysInfo.database = database
+        else
+          this.SysInfo.database = this.globalObject.database
 
 
-    if (cUserId != null)
-      this.SysInfo.cUserId = cUserId
+        if (cUserId != null)
+          this.SysInfo.cUserId = cUserId
 
-      if (cVenCode != null)
-      this.SysInfo.cVenCode = cVenCode
+        if (cVenCode != null)
+          this.SysInfo.cVenCode = cVenCode
 
         let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '" + this.tname + "', '" + this.SysInfo.cUserId + "'")
         const list: any[] = []
@@ -302,11 +303,11 @@ export default {
     async loadData() {
       try {
         this.loading = true;
-        let hangshu = await this.SqlWork("select", "select count(*) total from wlzh_pu_cgqr where userId='" + this.SysInfo.cUserId + "'")
+        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_cgqr where userId='${this.SysInfo.cUserId}' ${!this.filters.cPOID ? '' : `and cPOID like '%${this.filters.cPOID}%'`}${!this.filters.cVenName ? '' : `and cVenCode like '%${this.filters.cVenName}%'`}${!this.filters.cVenInvCode ? '' : `and cInvCode like '%${this.filters.cVenInvCode}%'`}${!this.filters.cVenInvName ? '' : `and cInvName like '%${this.filters.cVenInvName}%'`}${!this.filters.cState ? '' : `and cState='${this.filters.cState}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dArriveDate ? '' : `and dArriveDate='${this.filters.dArriveDate}'`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime='${this.filters.isconfirmtime}'`}${!this.filters.guanbi ? '' : `and isclose='${this.filters.guanbi}'`}`)
         this.total_List = hangshu.data.dataDetail[0].total
         // this.total_List = hangshu.dataDetail[0]
 
-        let res = await this.SqlWork("select", `exec wlzh_pu_cgddxs '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${!this.filters.cPOID ? '' : `and cPOID=''${this.filters.cPOID}''`}${!this.filters.cVenName ? '' : `and cVenCode=''${this.filters.cVenName}''`}${!this.filters.cVenInvCode ? '' : `and cVenInvCode=''${this.filters.cVenInvCode}''`}${!this.filters.cVenInvName ? '' : `and cVenInvName=''${this.filters.cVenInvName}''`}${!this.filters.cState ? '' : `and cState=''${this.filters.cState}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dArriveDate ? '' : `and dArriveDate=''${this.filters.dArriveDate}''`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime=''${this.filters.isconfirmtime}''`}${!this.filters.guanbi ? '' : `and isclose=''${this.filters.guanbi}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
+        let res = await this.SqlWork("select", `exec wlzh_pu_cgddxs '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${!this.filters.cPOID ? '' : `and cPOID like ''%${this.filters.cPOID}%''`}${!this.filters.cVenName ? '' : `and cVenCode like ''%${this.filters.cVenName}%''`}${!this.filters.cVenInvCode ? '' : `and cInvCode like ''%${this.filters.cVenInvCode}%''`}${!this.filters.cVenInvName ? '' : `and cInvName like ''%${this.filters.cVenInvName}%''`}${!this.filters.cState ? '' : `and cState=''${this.filters.cState}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dArriveDate ? '' : `and dArriveDate=''${this.filters.dArriveDate}''`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime=''${this.filters.isconfirmtime}''`}${!this.filters.guanbi ? '' : `and isclose=''${this.filters.guanbi}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
         this.bodyDataCopypolist_asn = res.data.dataDetail
         this.loading = false;
       } catch (error) {
