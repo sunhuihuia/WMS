@@ -174,7 +174,7 @@
     </el-form>
 
     <el-dialog v-model="dialogVisible" title="Asn单维护" @close="closeAsnvoucher" width="70%" :draggable="false">
-      <Asnvoucher :pVouchID="VouchID" v-if="dialogVisible" ref="refAsnvoucher">
+      <Asnvoucher  @determine="determine" :pVouchID="VouchID" v-if="dialogVisible" ref="refAsnvoucher">
       </Asnvoucher>
       <template #footer>
         <div class="dialog-footer">
@@ -396,6 +396,10 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    determine() {
+      this.loadData()
+      this.dialogVisible = false;
     },
     handleDaochu(command: string) {
       ElMessage(`click on item ${command}`)

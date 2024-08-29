@@ -2,13 +2,13 @@
 <template>
   <div class="home-model">
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="cMsgTitle" label="标题" width="280" />
+      <el-table-column prop="cMsgTitle" label="标题" width="600" />
       <el-table-column prop="dDate" label="时间" width="200"> <template #default="scope">
           <span>{{ moment(scope.row.dDate).format('YYYY-MM-DD') }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="username" label="公司" width="280" />
-      <el-table-column label="操作" width="80">
+      <el-table-column prop="username" label="公司" width="380" />
+      <el-table-column style="float: right;" label="操作" width="80">
         <template #default="scope">
           <el-button type="text" size="small" @click="handleEdit(scope.$index, scope.row)">
             详情

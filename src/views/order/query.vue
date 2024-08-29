@@ -101,7 +101,7 @@
           <el-button type="danger" @click="handleDaochu"> <span>导出</span></el-button>
         </el-col>
         <el-col :span="2" class="el-col">
-          <el-button @click="dialogVisibleClick" class text type='primary'>选择栏目</el-button>
+          <el-button @click="dialogVisibleClick" class type="success">选择栏目</el-button>
         </el-col>
       </el-row>
       <el-row class="el-row">
