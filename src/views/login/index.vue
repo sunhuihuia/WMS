@@ -180,7 +180,7 @@ const loginFormRef = ref(ElForm); // 登录表单ref
 const { height } = useWindowSize();
 
 const loginData = ref<LoginData>({
-  username: "demo",
+  username: "",
   password: "",
 });
 const ElSelectValue = ref("");
