@@ -105,6 +105,9 @@
             <el-button @click="print('preview')"><el-icon>
                 <View style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>预览打印</span></el-button>
+              <el-button @click="delAll"><el-icon>
+                <Delete style="width: 10em; height: 10em; margin-right: 0px" />
+              </el-icon><span>整单删除</span></el-button>
             <el-button @click="delRow"><el-icon>
                 <Delete style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>删行</span></el-button>
@@ -465,9 +468,137 @@ export default {
       this.ElSelectOptions = res.data.dataDetail;
 
     },
+    
+    save() {
+      var b = true
+      if (this.bodyData.length == 0) {
+        ElMessageBox.confirm(
+          '没有可保存的数据，请先点增加，然后选择所需要的数据',
+          '错误！',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+        )
+        b = false
+      }
+      if (this.bodyData.length > 0 && b == true) {
+        this.bodyData.forEach(async (item: any) => {
+          var index = this.bodyData.indexOf(item as never);
+
+          if (!this.isNumeric(item.iquantity)) {
+
+            ElMessageBox.confirm(
+              '第' + (index + 1) + '行数量必须为正的数字',
+              '错误！',
+              {
+                confirmButtonText: '确定',
+                //cancelButtonText: '取消',
+                type: 'warning',
+              }
+            )
+            b = false;
+            return;
+          }
+          if (item.bqty <= 0) {
+            ElMessageBox.confirm(
+              '第' + (index + 1) + '行数量必须大于0',
+              '错误！',
+              {
+                confirmButtonText: '确定',
+                //cancelButtonText: '取消',
+                type: 'warning',
+              }
+            )
+            b = false;
+            return;
+          }
+        });
+      }
+      if (b == true) {
+        let that = this
+        ElMessageBox.confirm(`确定保存?`)
+          .then(() => {
+            that.wlzh_ly_UpdateAsn()
+
+          })
+          .catch(() => {
+            // catch error
+          })
+      }
+
+    },
+    async wlzh_ly_UpdateAsn(){
+      try {
+        var GID = uuidv4();
+        const promises = this.bodyData.map(async (item: any) => {    
+          await this.SqlWork("update", "insert into wlzh_AsnModifyTemp(GID,Autoid,id,iquantity,cuser_id)  select '"+GID+"',"+item.autoid+","+item.id+","+(item.iquantity==""?"0":item.iquantity)+",'"+this.SysInfo.cUserId+"'  ")
+         });
+  // 等待所有循环操作完成 
+      await Promise.all(promises); // 执行最后的操作 
+
+      let res = await this.SqlWork("select", "wlzh_ly_UpdateAsn '" + GID + "' ")
+        if (res.data.dataDetail[0].result == '1') {
+          ElMessage({
+            type: 'success',
+            message: '保存成功!',
+            showClose: true,
+          })
+
+        } else {
+          ElMessage({
+            type: 'warning',
+            message:'保存失败!'+ res.data.dataDetail[0].cmsg,
+            showClose: true,
+          })
 
 
+        }
 
+
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    delAll(){
+      let that = this
+        ElMessageBox.confirm(`确定删除当前单据?`)
+          .then(() => {
+            that.wlzh_ly_DellAsn()
+
+          })
+          .catch(() => {
+            // catch error
+          })
+    },
+    async wlzh_ly_DellAsn(){
+      try {       
+        
+
+      let res = await this.SqlWork("select", "wlzh_ly_DellAsn " + this.VouchID + " ")
+        if (res.data.dataDetail[0].result == '1') {
+          ElMessage({
+            type: 'success',
+            message: '删除成功!',
+            showClose: true,
+          })
+
+        } else {
+          ElMessage({
+            type: 'warning',
+            message:'保存失败!'+ res.data.dataDetail[0].cmsg,
+            showClose: true,
+          })
+
+
+        }
+
+
+      } catch (error) {
+        console.log(error);
+      }
+    },
     fiterBodyData(): any {
 
       var b = this.bodyData.filter((data: any) => data.selected == false)

@@ -115,12 +115,8 @@
             <el-button @click="print('preview')"><el-icon>
                 <View style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>预览打印</span></el-button>
-            <el-button @click="test1"><el-icon>
-                <Memo style="width: 10em; height: 10em; margin-right: 0px" />
-              </el-icon><span>测试1</span></el-button>
-            <el-button @click="test2"><el-icon>
-                <Memo style="width: 10em; height: 10em; margin-right: 0px" />
-              </el-icon><span>测试2</span></el-button>
+            
+              
           </el-button-group>
 
         </el-col>
