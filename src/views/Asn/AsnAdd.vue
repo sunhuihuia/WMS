@@ -115,8 +115,8 @@
             <el-button @click="print('preview')"><el-icon>
                 <View style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>预览打印</span></el-button>
-            
-              
+
+
           </el-button-group>
 
         </el-col>
@@ -455,25 +455,25 @@ export default {
   //   const res = await this.SqlWork("select","select null a,2 b" );
 
   // },
-  onMounted(){
-try {
-  console.log('AsnAddonMounted')
-    
-} catch (error) {
-  console.log('error', error)
-}
-    
+  onMounted() {
+    try {
+      console.log('AsnAddonMounted')
+
+    } catch (error) {
+      console.log('error', error)
+    }
+
   },
   async mounted() {
     console.log('AsnAddmounted')
 
     const database = sessionStorage.getItem('cDatabase')
-    const cUserId = sessionStorage.getItem('username')    
+    const cUserId = sessionStorage.getItem('username')
     const cVenCode = sessionStorage.getItem('cVenCode')
 
-    
-    console.log('database',database)
-    console.log('cUserId',cUserId)
+
+    console.log('database', database)
+    console.log('cUserId', cUserId)
 
     if (database != null)
       this.SysInfo.database = database
@@ -484,9 +484,9 @@ try {
     if (cUserId != null)
       this.SysInfo.cUserId = cUserId
 
-      if (cVenCode != null)
+    if (cVenCode != null)
       this.SysInfo.cVenCode = cVenCode
-      
+
 
     console.log('this.SysInfo.database', this.SysInfo.database)
     const loading = ElLoading.service({ lock: true, text: 'Loading', background: 'rgba(0, 0, 0, 0.7)', })
@@ -724,15 +724,16 @@ try {
       const loading = ElLoading.service({ lock: true, text: 'Loading', background: 'rgba(0, 0, 0, 0.7)', })
       try {
 
-
+        const list: any = []
         this.bodymultipleSelection.forEach(async (item: any) => {
           var newitem = JSON.parse(JSON.stringify(item))
           var index = this.bodyData.findIndex((data: any) =>
             data.iposid == item.iposid
           )
+          list.push(index)
           if (index > -1) {
             await this.SqlWork("select", "delete from wlzh_asntemp where iposid =" + newitem.iposid + "  ")
-            this.bodyData.splice(index, 1)
+
           }
 
           var item2: any = this.bodyDataCopypolist_asn.find((data: any) =>
@@ -747,7 +748,8 @@ try {
 
           console.log(item2)
         })
-
+        list.sort((a: any, b: any) => Number(a) - Number(b)).reverse();
+        list.forEach((item: any) => { this.bodyData.splice(item, 1) })
       } catch (error) {
         console.error(error);
 
@@ -831,13 +833,13 @@ try {
         // this.bodyData.forEach(async (item: any) => {
         //   await this.SqlWork("update", "update wlzh_asntemp set bqty=" + item.iquantity + ",ctmemo='" + item.cmemo + "' where  id=" + item.id + " ")
         // });
-        const promises = this.bodyData.map(async (item: any) => {    
+        const promises = this.bodyData.map(async (item: any) => {
           await this.SqlWork("update", "update wlzh_asntemp set bqty=" + item.iquantity + ",ctmemo='" + item.cmemo + "' where  id=" + item.id + " ")
-         });
-  // 等待所有循环操作完成 
-  await Promise.all(promises); // 执行最后的操作 
+        });
+        // 等待所有循环操作完成 
+        await Promise.all(promises); // 执行最后的操作 
 
-        
+
         var GID = uuidv4();
         await this.SqlWork("update", "update wlzh_asntemp set GID='" + GID + "',cHeadMemo='" + this.headerData.cheadmemo + "'" + (this.headerData.fahuori && this.headerData.fahuori != '' ? ",fahuori='" + this.headerData.fahuori + "'" : "") + (this.headerData.yujidaohuori && this.headerData.yujidaohuori != '' ? ",yujidaohuori='" + this.headerData.yujidaohuori + "'" : "") + "     where  cuser_id='" + this.SysInfo.cUserId + "' ")
 

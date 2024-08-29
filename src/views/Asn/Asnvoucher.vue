@@ -105,7 +105,7 @@
             <el-button @click="print('preview')"><el-icon>
                 <View style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>预览打印</span></el-button>
-              <el-button @click="delAll"><el-icon>
+            <el-button @click="delAll"><el-icon>
                 <Delete style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>整单删除</span></el-button>
             <el-button @click="delRow"><el-icon>
@@ -298,7 +298,7 @@ export default {
       testObj: { ddate: '' },
       dialogVisible: false,
       headerData: { ccode: '', cvencode: '', cvenabbname: '', ddate: '', address: '到货地址', dhfs: '到货方式', contacts: '联系人', phone: '电话', cheadmemo: '', fahuori: '', yujidaohuori: '' },
-      bodyData: [],
+      bodyData: [] ,
       bodyDataCopypolist_asn: [],
       filters: {
         cordercode: '', cinvcode: '', cinvname: '', cinvstd: '',
@@ -345,7 +345,7 @@ export default {
 
     // this.VouchID=this.pVouchID;
     const database = sessionStorage.getItem('cDatabase')
-    const cUserId = sessionStorage.getItem('username')    
+    const cUserId = sessionStorage.getItem('username')
     const cVenCode = sessionStorage.getItem('cVenCode')
 
     if (database != null)
@@ -357,7 +357,7 @@ export default {
     if (cUserId != null)
       this.SysInfo.cUserId = cUserId
 
-      if (cVenCode != null)
+    if (cVenCode != null)
       this.SysInfo.cVenCode = cVenCode
 
 
@@ -411,17 +411,16 @@ export default {
     handleInputChange() {
 
     },
-    delRow() { 
-      console.log(this.bodyData, this.bodymultipleSelection);
-      const list: any[] = []
-      this.bodyData.forEach((val: any) => {
-        this.bodymultipleSelection.forEach((item: any) => {
-          if (val.cinvcode === item.cinvcode) {
-            list.push(val);
-          }
+    delRow() {
+      const list: any = []
+        this.multipleSelection.forEach((val: any) => {
+          let index = this.bodyData.findIndex((data: any) =>
+            data.cinvcode == val.cinvcode
+          )
+          list.push(index)
         })
-      })
-      this.bodyData = list as never[]
+        list.sort((a: any, b: any) => Number(a) - Number(b)).reverse();
+        list.forEach((item: any) => { this.bodyData.splice(item, 1) })
     },
     print(DealType: string) {
       var ModlePath = "src/views/Asn/Asn1.grf"
@@ -471,7 +470,7 @@ export default {
       this.ElSelectOptions = res.data.dataDetail;
 
     },
-    
+
     save() {
       var b = true
       if (this.bodyData.length == 0) {
@@ -532,16 +531,16 @@ export default {
       }
 
     },
-    async wlzh_ly_UpdateAsn(){
+    async wlzh_ly_UpdateAsn() {
       try {
         var GID = uuidv4();
-        const promises = this.bodyData.map(async (item: any) => {    
-          await this.SqlWork("update", "insert into wlzh_AsnModifyTemp(GID,Autoid,id,iquantity,cuser_id)  select '"+GID+"',"+item.autoid+","+item.id+","+(item.iquantity==""?"0":item.iquantity)+",'"+this.SysInfo.cUserId+"'  ")
-         });
-  // 等待所有循环操作完成 
-      await Promise.all(promises); // 执行最后的操作 
+        const promises = this.bodyData.map(async (item: any) => {
+          await this.SqlWork("update", "insert into wlzh_AsnModifyTemp(GID,Autoid,id,iquantity,cuser_id)  select '" + GID + "'," + item.autoid + "," + item.id + "," + (item.iquantity == "" ? "0" : item.iquantity) + ",'" + this.SysInfo.cUserId + "'  ")
+        });
+        // 等待所有循环操作完成 
+        await Promise.all(promises); // 执行最后的操作 
 
-      let res = await this.SqlWork("select", "wlzh_ly_UpdateAsn '" + GID + "' ")
+        let res = await this.SqlWork("select", "wlzh_ly_UpdateAsn '" + GID + "' ")
         if (res.data.dataDetail[0].result == '1') {
           ElMessage({
             type: 'success',
@@ -552,7 +551,7 @@ export default {
         } else {
           ElMessage({
             type: 'warning',
-            message:'保存失败!'+ res.data.dataDetail[0].cmsg,
+            message: '保存失败!' + res.data.dataDetail[0].cmsg,
             showClose: true,
           })
 
@@ -564,22 +563,22 @@ export default {
         console.log(error);
       }
     },
-    delAll(){
+    delAll() {
       let that = this
-        ElMessageBox.confirm(`确定删除当前单据?`)
-          .then(() => {
-            that.wlzh_ly_DellAsn()
+      ElMessageBox.confirm(`确定删除当前单据?`)
+        .then(() => {
+          that.wlzh_ly_DellAsn()
 
-          })
-          .catch(() => {
-            // catch error
-          })
+        })
+        .catch(() => {
+          // catch error
+        })
     },
-    async wlzh_ly_DellAsn(){
-      try {       
-        
+    async wlzh_ly_DellAsn() {
+      try {
 
-      let res = await this.SqlWork("select", "wlzh_ly_DellAsn " + this.VouchID + " ")
+
+        let res = await this.SqlWork("select", "wlzh_ly_DellAsn " + this.VouchID + " ")
         if (res.data.dataDetail[0].result == '1') {
           ElMessage({
             type: 'success',
@@ -590,7 +589,7 @@ export default {
         } else {
           ElMessage({
             type: 'warning',
-            message:'保存失败!'+ res.data.dataDetail[0].cmsg,
+            message: '保存失败!' + res.data.dataDetail[0].cmsg,
             showClose: true,
           })
 
