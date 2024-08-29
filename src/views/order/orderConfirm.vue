@@ -45,6 +45,13 @@
           </el-form-item>
         </div>
       </el-col>
+      <el-col :span="8" class="el-col">
+          <div class="grid-content ep-bg-purple-light">
+            <el-form-item label="订单号:">
+              <el-input v-model="filters.cPOID" placeholder="请输入订单号" />
+            </el-form-item>
+          </div>
+        </el-col>
     </el-row>
     <el-row class="el-row" style="display: flex;justify-content: space-between;">
       <el-col :span="16" class="el-col">
@@ -158,7 +165,7 @@ export default {
       dialogVisible: false,
       dialogVisible1: false,
       pVouchID: '',
-      filters: { cyzt: '', cVenName: '', dConfirmTime: '', qrzy: '', dPODate: '', dReadTime: '' },
+      filters: { cyzt: '',cPOID:"" ,cVenName: '', dConfirmTime: '', qrzy: '', dPODate: '', dReadTime: '' },
       bodyData: [],
       bodyDataCopypolist_asn: [],
       headerData: [] as HeaderItem[],
@@ -287,7 +294,8 @@ export default {
     async loadData() {
       try {
         this.loading = true;
-        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_po_cgqr where  userId='${this.SysInfo.cUserId}' ${this.SysInfo.cVenCode == '' ? '' : " and cVenCode='" + this.SysInfo.cVenCode + "'"} ${!this.filters.cyzt ? '' : `and cyzt='${this.filters.cyzt}'`}${!this.filters.cVenName ? '' : `and cVenCode like '%${this.filters.cVenName}%'`}${!this.filters.dConfirmTime ? '' : `and dConfirmTime='${this.filters.dConfirmTime}'`}${!this.cCode ? '' : `and cPOID='${this.cCode}'`}${!this.filters.qrzy ? '' : `and qrzy='${this.filters.qrzy}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dReadTime ? '' : `and dReadTime='${this.filters.dReadTime}'`}`)
+        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_po_cgqr where  userId='${this.SysInfo.cUserId}' ${this.SysInfo.cVenCode == '' ? '' : " and cVenCode='" + this.SysInfo.cVenCode + "'"} ${!this.filters.cyzt ? '' : `and cyzt='${this.filters.cyzt}'`}${!this.filters.cVenName ? '' : `and cVenCode like '%${this.filters.cVenName}%'`}${!this.filters.dConfirmTime ? '' : `and dConfirmTime='${this.filters.dConfirmTime}'`}${!this.cCode ? '' : `and cPOID='${this.cCode}'`}
+        ${!this.filters.cPOID ? '' : `and cPOID='${this.cPOID}'`}${!this.filters.qrzy ? '' : `and qrzy='${this.filters.qrzy}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dReadTime ? '' : `and dReadTime='${this.filters.dReadTime}'`}`)
         this.total_List = hangshu.data.dataDetail[0].total
         let res = await this.SqlWork("select", `exec wlzh_pu_cgddqr_list '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${this.SysInfo.cVenCode == '' ? '' : " and cVenCode=''" + this.SysInfo.cVenCode + "''"} ${!this.filters.cyzt ? '' : `and cyzt=''${this.filters.cyzt}''`}${!this.filters.cVenName ? '' : `and cVenCode like ''%${this.filters.cVenName}%''`}${!this.filters.dConfirmTime ? '' : `and dConfirmTime=''${this.filters.dConfirmTime}''`}${!this.filters.qrzy ? '' : `and qrzy=''${this.filters.qrzy}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dReadTime ? '' : `and dReadTime=''${this.filters.dReadTime}''`}${!this.cCode ? '' : `and cPOID=''${this.cCode}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
         this.bodyDataCopypolist_asn = res.data.dataDetail
