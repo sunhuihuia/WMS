@@ -108,7 +108,7 @@
             <el-button @click="delRow"><el-icon>
                 <Delete style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>删行</span></el-button>
-            <el-button @click="save"><el-icon>
+            <el-button><el-icon>
                 <Memo style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>保存</span></el-button>
           </el-button-group>
@@ -130,7 +130,7 @@
           <el-table-column prop="dfhsl" label="待发货数量" width="120" />
           <el-table-column prop="iquantity" label="本次发货数量" width="120">
             <template #default="scope">
-              <el-input v-model="scope.row.iquantity" @change="handleInputChange" style="width: 100%" />
+              <el-input v-model="scope.row.iquantity" style="width: 100%" />
             </template>
           </el-table-column>
           <el-table-column prop="darridateb" label="预到货日期" width="120" :sortable="true" />
@@ -342,7 +342,7 @@ export default {
 
     // this.VouchID=this.pVouchID;
     const database = sessionStorage.getItem('cDatabase')
-    const cUserId = sessionStorage.getItem('username')    
+    const cUserId = sessionStorage.getItem('username')
     const cVenCode = sessionStorage.getItem('cVenCode')
 
     if (database != null)
@@ -354,7 +354,7 @@ export default {
     if (cUserId != null)
       this.SysInfo.cUserId = cUserId
 
-      if (cVenCode != null)
+    if (cVenCode != null)
       this.SysInfo.cVenCode = cVenCode
 
 
@@ -405,10 +405,21 @@ export default {
         console.error(error);
       }
     },
-    handleInputChange() {
 
+    delRow() {
+
+      console.log(this.bodyData, this.bodymultipleSelection);
+      const list: never[] = []
+      this.bodyData.forEach((val: any) => {
+        console.log(val.cinvcode);
+        this.bodymultipleSelection.forEach((item: any) => {
+          if (val.cinvcode === item.cinvcode) {
+            list.push(val);
+          }
+        })
+      })
+      this.bodyData = list;
     },
-    delRow() { },
     print(DealType: string) {
       var ModlePath = "src/views/Asn/Asn1.grf"
       this.goPrint(DealType, this.bodyData, ModlePath)
@@ -439,16 +450,13 @@ export default {
       //this.fiterBodyData();
     },
 
-    bodyhandleSelectionChange(newSelection: never[]) {
+    handleSelectionChange(newSelection: never[]) {
       // this.multipleSelection = val;
+
       this.bodymultipleSelection = newSelection;
 
     },
-    handleSelectionChange(newSelection: never[]) {
-      // this.multipleSelection = val;
-      this.multipleSelection = newSelection;
 
-    },
 
     async HandleSelectChange_ElSelect() {
       this.ElSelectLoading = true
@@ -457,17 +465,7 @@ export default {
       this.ElSelectOptions = res.data.dataDetail;
 
     },
-    async save(){
-      try {
-        const promises = this.bodyData.map(async (item: any) => {    
-          await this.SqlWork("update", "insert into wlzh_asnUpdateTemp() set bqty=" + item.iquantity + ",ctmemo='" + item.cmemo + "' where  id=" + item.id + " ")
-         });
-  // 等待所有循环操作完成 
-      await Promise.all(promises); // 执行最后的操作 
-      } catch (error) {
-        console.log(error);
-      }
-    },
+
 
 
     fiterBodyData(): any {

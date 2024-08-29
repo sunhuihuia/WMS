@@ -68,8 +68,8 @@
           :label="item.name">
           <template #default="scope">
             <div style="display: flex; align-items: center">
-              <span v-if="scope.column.property !== 'cPOID'" style="margin-left: 10px">{{
-                scope.row[`${scope.column.property}`] }}</span>
+              <span v-if="scope.column.property !== 'cPOID'" style="margin-left: 10px">{{ !moment(scope.row[`${scope.column.property}`], 'YYYY-MM-DDTHH:mm:ss',true).isValid() ? scope.row[`${scope.column.property}`] : moment(scope.row.dDate).format('YYYY-MM-DD')
+                 }}</span>
               <el-button v-else-if="scope.column.property === 'cPOID'" @click="scopeclick(scope)" class text
                 type='primary' bg>{{
                   scope.row[`${scope.column.property}`] }}</el-button>
@@ -111,6 +111,7 @@ import type { HeaderItem } from './query'
 import orderTable from './orderTable.vue'
 import confirmDY from './confirmDY.vue'
 import router from "@/router";
+import moment from "moment"
 
 export default {
   components: {
@@ -142,7 +143,7 @@ export default {
       value: () => Date[]; // 假设 getLastWeek 等方法返回 Date 数组
     }
     return { // 返回组件中可使用的属性和方法
-      labelPosition, labelPosition2, formLabelAlign, globalObject
+      labelPosition, labelPosition2, formLabelAlign, globalObject,moment
     };
 
   },
@@ -191,13 +192,11 @@ export default {
 
   mounted() {
     this.handle()
-    console.log(this.$route.query.cCode
-    );
     if (this.$route.query.cCode) {
       this.cCode = this.$route.query.cCode ? this.$route.query.cCode.toString() : '';
       this.loadData()
     }
-
+    // console.log(mount,123123123);
   },
 
   methods: {
@@ -205,7 +204,7 @@ export default {
       console.log(data, 312312);
 
       this.pVouchID = data.row.POID + ""
-      this.dialogVisible1 = true
+      // this.dialogVisible1 = true
 
     },
     async SqlWork(CommandType: string, SqlsStr: string): Promise<any> {
@@ -265,9 +264,9 @@ export default {
         if (cVenCode != null)
           this.SysInfo.cVenCode = cVenCode
 
-          if (roles==null) roles=''
-        if(  roles.includes('admin')  ) 
-            this.SysInfo.cVenCode=''
+        if (roles == null) roles = ''
+        if (roles.includes('admin'))
+          this.SysInfo.cVenCode = ''
 
 
         let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '" + this.tname + "', '" + this.SysInfo.cUserId + "'")
@@ -288,11 +287,12 @@ export default {
     async loadData() {
       try {
         this.loading = true;
-        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_po_cgqr where  userId='${this.SysInfo.cUserId}' ${this.SysInfo.cVenCode=='' ? '' : " and cVenCode='"+ this.SysInfo.cVenCode +"'"} ${!this.filters.cyzt ? '' : `and cyzt='${this.filters.cyzt}'`}${!this.filters.cVenName ? '' : `and cVenCode like '%${this.filters.cVenName}%'`}${!this.filters.dConfirmTime ? '' : `and dConfirmTime='${this.filters.dConfirmTime}'`}${!this.cCode ? '' : `and cPOID='${this.cCode}'`}${!this.filters.qrzy ? '' : `and qrzy='${this.filters.qrzy}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dReadTime ? '' : `and dReadTime='${this.filters.dReadTime}'`}`)
+        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_po_cgqr where  userId='${this.SysInfo.cUserId}' ${this.SysInfo.cVenCode == '' ? '' : " and cVenCode='" + this.SysInfo.cVenCode + "'"} ${!this.filters.cyzt ? '' : `and cyzt='${this.filters.cyzt}'`}${!this.filters.cVenName ? '' : `and cVenCode like '%${this.filters.cVenName}%'`}${!this.filters.dConfirmTime ? '' : `and dConfirmTime='${this.filters.dConfirmTime}'`}${!this.cCode ? '' : `and cPOID='${this.cCode}'`}${!this.filters.qrzy ? '' : `and qrzy='${this.filters.qrzy}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dReadTime ? '' : `and dReadTime='${this.filters.dReadTime}'`}`)
         this.total_List = hangshu.data.dataDetail[0].total
-        let res = await this.SqlWork("select", `exec wlzh_pu_cgddqr_list '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${this.SysInfo.cVenCode=='' ? '' : " and cVenCode=''"+ this.SysInfo.cVenCode +"''"} ${!this.filters.cyzt ? '' : `and cyzt=''${this.filters.cyzt}''`}${!this.filters.cVenName ? '' : `and cVenCode like ''%${this.filters.cVenName}%''`}${!this.filters.dConfirmTime ? '' : `and dConfirmTime=''${this.filters.dConfirmTime}''`}${!this.filters.qrzy ? '' : `and qrzy=''${this.filters.qrzy}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dReadTime ? '' : `and dReadTime=''${this.filters.dReadTime}''`}${!this.cCode ? '' : `and cPOID=''${this.cCode}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
+        let res = await this.SqlWork("select", `exec wlzh_pu_cgddqr_list '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${this.SysInfo.cVenCode == '' ? '' : " and cVenCode=''" + this.SysInfo.cVenCode + "''"} ${!this.filters.cyzt ? '' : `and cyzt=''${this.filters.cyzt}''`}${!this.filters.cVenName ? '' : `and cVenCode like ''%${this.filters.cVenName}%''`}${!this.filters.dConfirmTime ? '' : `and dConfirmTime=''${this.filters.dConfirmTime}''`}${!this.filters.qrzy ? '' : `and qrzy=''${this.filters.qrzy}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dReadTime ? '' : `and dReadTime=''${this.filters.dReadTime}''`}${!this.cCode ? '' : `and cPOID=''${this.cCode}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
         this.bodyDataCopypolist_asn = res.data.dataDetail
         this.loading = false;
+        this.cCode = ''
       } catch (error) {
       }
     },

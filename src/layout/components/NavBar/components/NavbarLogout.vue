@@ -17,14 +17,10 @@ const loading = ref(false); // 按钮loading
 const isCapslock = ref(false); // 是否大写锁定
 const loginFormRef = ref(ElForm); // 登录表单ref
 const { height } = useWindowSize();
-const SysInfo = ref({
-  cUserId: 'demo',
-  cVenCode: '0080',
-  database: 'ufdata_002_2019',
-  ApiUrl: '',
-})
+const database = sessionStorage.getItem('cDatabase')
+const cUserId = sessionStorage.getItem('username')
 const loginData = ref({
-  username: "demo",
+  username: sessionStorage.getItem('username'),
   password: "",
   password1: '',
   password2: "",
@@ -89,8 +85,8 @@ async function handleLogin() {
     if (loginData.value.password1 === loginData.value.password2) {
       const res = await axios.post(globalObject.ApiUrl,
         {
-          "CommandType": "EditPwd", "database": SysInfo.value.database,
-          "cuser_id": SysInfo.value.cUserId, "cpasswordOld": loginData.value.password, "cpasswordNew": loginData.value.password1
+          "CommandType": "EditPwd", "database": database,
+          "cuser_id": cUserId, "cpasswordOld": loginData.value.password, "cpasswordNew": loginData.value.password1
         });
     } else {
       ElMessage({

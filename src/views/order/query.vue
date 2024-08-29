@@ -113,6 +113,13 @@
           </el-table-column>
           <el-table-column v-for="(item, index) in headerData" :prop="item.defaultname" :key="index" :width="item.width"
             :label="item.name">
+            <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span  style="margin-left: 10px">{{ !moment(scope.row[`${scope.column.property}`], 'YYYY-MM-DDTHH:mm:ss',true).isValid() ? scope.row[`${scope.column.property}`] : moment(scope.row.dDate).format('YYYY-MM-DD')
+                 }}</span>
+              
+            </div>
+          </template>
           </el-table-column>
         </el-table>
 
@@ -147,7 +154,7 @@ import { fa } from 'element-plus/es/locale';
 import { stringify } from 'querystring';
 import orderTable from './orderTable.vue'
 import { Excel } from '@/utils/exportExcel';
-import { List } from 'echarts';
+import moment from "moment"
 
 export default {
   components: {
@@ -180,7 +187,7 @@ export default {
       value: () => Date[]; // 假设 getLastWeek 等方法返回 Date 数组
     }
     return { // 返回组件中可使用的属性和方法
-      labelPosition, labelPosition2, formLabelAlign, globalObject
+      labelPosition, labelPosition2, formLabelAlign, globalObject,moment
     };
 
   },
@@ -276,8 +283,6 @@ export default {
         const cUserId = sessionStorage.getItem('username')
         const cVenCode = sessionStorage.getItem('cVenCode')
         var roles = sessionStorage.getItem('roles')
-        console.log('database', database)
-        console.log('cUserId', cUserId)
         if (database != null)
           this.SysInfo.database = database
         else

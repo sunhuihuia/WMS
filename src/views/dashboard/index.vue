@@ -61,7 +61,7 @@ const handleCurrentChange_List = (val: any) => {
   loadData();
 }
 const loadData = async () => {
-  const hangshu = await SqlWork("select", `select count(*) total from wlzh_pu_task_view where userId='=''${cUserId}'`)
+  const hangshu = await SqlWork("select", `select count(*) total from wlzh_pu_task_view where userId='${cUserId}'`)
   const res = await SqlWork("select", `exec [wlzh_pu_tycg] 'wlzh_pu_task_view',' and userId=''${cUserId}''',${pageSize_List.value},${pageNum_List.value}`)
   tableData.value = res?.data?.dataDetail
   total_List.value = hangshu?.data?.dataDetail[0].total;
