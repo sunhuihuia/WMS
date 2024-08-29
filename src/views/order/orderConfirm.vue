@@ -208,10 +208,9 @@ export default {
 
   methods: {
     scopeclick(data: any) {
-      console.log(data, 312312);
 
       this.pVouchID = data.row.POID + ""
-      // this.dialogVisible1 = true
+      this.dialogVisible1 = true
 
     },
     async SqlWork(CommandType: string, SqlsStr: string): Promise<any> {
