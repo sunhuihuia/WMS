@@ -115,9 +115,7 @@
             :label="item.name">
             <template #default="scope">
             <div style="display: flex; align-items: center">
-              <span  style="margin-left: 10px">{{ !moment(scope.row[`${scope.column.property}`], 'YYYY-MM-DDTHH:mm:ss',true).isValid() ? scope.row[`${scope.column.property}`] : moment(scope.row.dDate).format('YYYY-MM-DD')
-                 }}</span>
-              
+              <span  style="margin-left: 10px">{{ !moment(scope.row[`${scope.column.property}`], 'YYYY-MM-DDTHH:mm:ss',true).isValid() ? scope.row[`${scope.column.property}`] : moment(scope.row.dDate).format('YYYY-MM-DD')}}</span>
             </div>
           </template>
           </el-table-column>
@@ -200,7 +198,7 @@ export default {
       testObj: { ddate: '' },
       tableData2: [],
       dialogVisible: false,
-      filters: { cPOID: '', cVenName: '', cVenInvCode: '', cVenInvName: '', cState: '', dPODate: '', dArriveDate: '', isconfirmtime: '', guanbi: '' },
+      filters: { cPOID: '', cVenName: '', cVenInvCode: '', cVenInvName: '', cState: '0', dPODate: '', dArriveDate: '', isconfirmtime: '', guanbi: '0' },
       bodyData: [],
       bodyDataCopypolist_asn: [],
       headerData: [] as HeaderItem[],
