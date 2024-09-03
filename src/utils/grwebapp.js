@@ -1,6 +1,8 @@
 ﻿//变量 _grwebapp_url 指定WEB报表客户端安装程序的下载URL，当通过WebSocket通讯不成功时，提示用户用此URL下载程序进行安装。
 //或用于自动更新WEB报表客户端时下载新版本，开发者应将 _grwebapp_url 改为自己服务器的URL，方便用户从可访问的WEB服务器下载
 //变量 _grwebapp_version 指定自动更新时，客户端程序需要的版本号，如果小于此版本号，则自动进行更新
+import { ElMessageBox } from 'element-plus'
+
 var _grwebapp_websocket = null,
     _grwebapp_url = "http://www.rubylong.cn/download/gridreport6-webapp.exe",
     _grwebapp_version = "6.8.3.0",
@@ -115,8 +117,8 @@ function webapp_urlprotocol_run(args, report_url, data_url) {
     if (data_url) {
         args.data = data_url;
     }
-
-    window.location.href = _gr_up_href(args);
+console.log(args, report_url, data_url,'321312313123');
+window.location.href = _gr_up_href(args);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -169,12 +171,14 @@ function webapp_ws_create(onopen) {
 
             //弹出alert提示信息，可修改为更适合的表述
             //alert("创建WebSocket失败，可能是‘WEB报表客户端程序’在本机没有安装，或在报表网页加载时没有调用‘webapp_urlprotocol_startup’函数进行启动。");
-            alert("创建WebSocket失败，可能是WEB报表客户端程序没有启动，或其在本机没有安装，请根据http://www.rubylong.cn/download/gridreport6-webapp.exe进行下载安装。");
-
-            //在网页最前面加上提示下载的文字，可修改为更适合的表述与界面形式
-            //newNode.innerHTML = '特别提示：<a href="' + _grwebapp_url + '">点击下载WEB报表客户端程序</a>，下载后双击下载的文件进行安装，安装完成后重新打开当前网页。';
-            newNode.innerHTML = '特别提示：尝试<a href="javascript:webapp_urlprotocol_startup();">启动WEB报表客户端程序</a>。或<a href="' + _grwebapp_url + '">点击下载WEB报表客户端程序</a>，下载后双击下载的文件进行安装，安装完成后重新打开当前网页。';
-            document.body.insertBefore(newNode, referNode);
+      
+            ElMessageBox.confirm(`您没有安装WEB报表客户端程序 是否进行安装?`)
+            .then(() => {
+              window.location.href = 'http://www.rubylong.cn/download/gridreport6-webapp.exe'
+            })
+            .catch(() => {
+              // catch e 
+            })  
         };
 
         //连接关闭的回调方法
@@ -290,7 +294,7 @@ function webapp_ws_run(variant_args, report, data) {
 
     if (Array.isArray(variant_args)) {
         variant_args.forEach(function (args) {
-            run_one(args);
+            run_one(args, report, data);
         })
     }
     else {
