@@ -547,7 +547,7 @@ export default {
 
     },
     goPrint(DealType: string, PrintData: any, ModlePath: string) {
-
+      webapp_urlprotocol_run();
       var json_data = { recordset: [] }
       var recordset = PrintData;
       json_data.recordset = recordset

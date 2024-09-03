@@ -172,7 +172,7 @@ function webapp_ws_create(onopen) {
             //弹出alert提示信息，可修改为更适合的表述
             //alert("创建WebSocket失败，可能是‘WEB报表客户端程序’在本机没有安装，或在报表网页加载时没有调用‘webapp_urlprotocol_startup’函数进行启动。");
       
-            ElMessageBox.confirm(`您没有安装WEB报表客户端程序 是否进行安装?`)
+            ElMessageBox.confirm(`您还没有安装打印程序，是否进行安装?`)
             .then(() => {
               window.location.href = 'http://www.rubylong.cn/download/gridreport6-webapp.exe'
             })

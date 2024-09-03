@@ -120,6 +120,7 @@ import confirmDY from './confirmDY.vue'
 import router from "@/router";
 import moment from "moment"
 
+
 export default {
   components: {
     orderTable,
@@ -203,6 +204,7 @@ export default {
       this.cCode = this.$route.query.cCode ? this.$route.query.cCode.toString() : '';
       this.loadData()
     }
+    
     // console.log(mount,123123123);
   },
 
