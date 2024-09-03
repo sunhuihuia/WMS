@@ -277,7 +277,7 @@ import { v4 as uuidv4 } from 'uuid'
 import moment from "moment"
 import { fa } from 'element-plus/es/locale';
 // import AsnLoadPm from './AsnLoadPm.vue';
-import { webapp_ws_ajax_run, webapp_urlprotocol_startup, urlAddRandomNo } from "@/utils/grwebapp";
+import { webapp_ws_ajax_run, webapp_urlprotocol_run, urlAddRandomNo } from "@/utils/grwebapp";
 
 export default {
   // components:{
@@ -502,7 +502,7 @@ export default {
 
 
     loading.close();
-      webapp_urlprotocol_startup();  
+    webapp_urlprotocol_run();
   },
 
   methods: {
@@ -841,7 +841,7 @@ export default {
 
 
         var GID = uuidv4();
-        GID=GID.replace(/-/g, '').replace(":", '');
+        GID = GID.replace(/-/g, '').replace(":", '');
         await this.SqlWork("update", "update wlzh_asntemp set GID='" + GID + "',cHeadMemo='" + this.headerData.cheadmemo + "'" + (this.headerData.fahuori && this.headerData.fahuori != '' ? ",fahuori='" + this.headerData.fahuori + "'" : "") + (this.headerData.yujidaohuori && this.headerData.yujidaohuori != '' ? ",yujidaohuori='" + this.headerData.yujidaohuori + "'" : "") + "     where  cuser_id='" + this.SysInfo.cUserId + "' ")
 
         let res = await this.SqlWork("select", "wlzh_ly_saveasn '" + GID + "' ")

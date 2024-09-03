@@ -172,7 +172,7 @@ import { v4 as uuidv4 } from 'uuid'
 import moment from "moment"
 import { fa } from 'element-plus/es/locale';
 // import AsnLoadPm from './AsnLoadPm.vue';
-import { webapp_ws_ajax_run, webapp_urlprotocol_startup, urlAddRandomNo } from "@/utils/grwebapp";
+import { webapp_ws_ajax_run, webapp_urlprotocol_run, urlAddRandomNo } from "@/utils/grwebapp";
 
 export default {
   // components:{
@@ -388,7 +388,7 @@ export default {
     }
 
 
-         webapp_urlprotocol_startup(); 
+    webapp_urlprotocol_run(); 
   },
 
   methods: {
