@@ -384,11 +384,11 @@ export default {
 
       loading.close();
 
-      // webapp_urlprotocol_startup();
+        //webapp_urlprotocol_startup();
     }
 
 
-    //    webapp_urlprotocol_startup(); 
+         webapp_urlprotocol_startup(); 
   },
 
   methods: {

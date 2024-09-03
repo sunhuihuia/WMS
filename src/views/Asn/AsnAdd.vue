@@ -502,7 +502,7 @@ export default {
 
 
     loading.close();
-    // webapp_urlprotocol_startup();  
+      webapp_urlprotocol_startup();  
   },
 
   methods: {
@@ -574,7 +574,7 @@ export default {
 
         var filterStr = "  ";
 
-        if (this.SysInfo.cVenCode != '') {
+        if (this.SysInfo.cVenCode != '' && this.SysInfo.cVenCode != 'null') {
           filterStr += " and t.cvencode=''" + this.SysInfo.cVenCode + "''";
         }
         if (this.filters.cordercode != '') {
@@ -841,9 +841,11 @@ export default {
 
 
         var GID = uuidv4();
+        GID=GID.replace(/-/g, '').replace(":", '');
         await this.SqlWork("update", "update wlzh_asntemp set GID='" + GID + "',cHeadMemo='" + this.headerData.cheadmemo + "'" + (this.headerData.fahuori && this.headerData.fahuori != '' ? ",fahuori='" + this.headerData.fahuori + "'" : "") + (this.headerData.yujidaohuori && this.headerData.yujidaohuori != '' ? ",yujidaohuori='" + this.headerData.yujidaohuori + "'" : "") + "     where  cuser_id='" + this.SysInfo.cUserId + "' ")
 
         let res = await this.SqlWork("select", "wlzh_ly_saveasn '" + GID + "' ")
+        console.log(res)
         if (res.data.dataDetail[0].result == '1') {
 
 
