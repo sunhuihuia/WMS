@@ -105,7 +105,8 @@ import { fa } from 'element-plus/es/locale';
 import type { HeaderItem } from './query'
 
 // import AsnLoadPm from './AsnLoadPm.vue';
-import { webapp_ws_ajax_run, webapp_urlprotocol_startup, urlAddRandomNo } from "@/utils/grwebapp";
+import { webapp_ws_ajax_run,   webapp_urlprotocol_run，urlAddRandomNo } from "@/utils/grwebapp";
+ 
 
 export default {
   // components:{
@@ -272,6 +273,8 @@ export default {
     };
     this.headerData = this.headerList as HeaderItem[];
     this.loadData()
+    
+    webapp_urlprotocol_run();
   },
 
   methods: {
@@ -309,6 +312,8 @@ export default {
       this.goPrint(DealType, this.bodyDataCopypolist_asn, ModlePath)
     },
     goPrint(DealType: string, PrintData: any, ModlePath: string) {
+      
+    webapp_urlprotocol_run();
       var json_data = { recordset: [] }
       var recordset = PrintData;
       json_data.recordset = recordset
