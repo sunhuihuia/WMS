@@ -568,6 +568,7 @@ export default {
       ElMessageBox.confirm(`确定删除当前单据?`)
         .then(() => {
           that.wlzh_ly_DellAsn()
+          this.$emit('determine')
 
         })
         .catch(() => {
