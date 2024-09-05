@@ -4,8 +4,8 @@
       <el-row class="el-row">
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="供应商:">
-              <el-input v-model="filters.cVenName" placeholder="请输入供应商" />
+            <el-form-item label="供应商编码:">
+              <el-input v-model="filters.cVenName" placeholder="请输入供应商编码" />
             </el-form-item>
           </div>
         </el-col>
@@ -18,12 +18,12 @@
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="存货编码:">
-              <el-input v-model="filters.cVenInvCode" placeholder="请输入存货编码" />
+            <el-form-item label="供应商名称:">
+              <el-input v-model="filters.cVenName" placeholder="请输入供应商名称" />
             </el-form-item>
-
           </div>
         </el-col>
+
 
       </el-row>
 
@@ -40,56 +40,25 @@
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="确认状态:">
-              <el-select v-model="filters.isconfirmtime" placeholder="选择状态" :loading="ElSelectLoading"
-                style="width: 100%" name="caccid">
-                <el-option v-for="item in zhuangtaiList" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
+            <el-form-item label="存货编码:">
+              <el-input v-model="filters.cVenInvCode" placeholder="请输入存货编码" />
             </el-form-item>
+
           </div>
         </el-col>
+
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple-light">
-            <el-form-item label="订货日期:">
-              <el-date-picker v-model="filters.dPODate" format="YYYY/MM/DD" value-format="YYYY-MM-DD" placeholder="选择日期"
-                type="date" unlink-panels range-separator="To" />
+            <el-form-item label="单据日期:">
+              <el-date-picker v-model="filters.dPODate" type="daterange" format="YYYY/MM/DD"
+                start-placeholder="开始时间" end-placeholder="结束时间" value-format="YYYY-MM-DD" placeholder="选择日期"
+                unlink-panels range-separator="To" />
             </el-form-item>
           </div>
         </el-col>
 
       </el-row>
 
-      <el-row class="el-row">
-        <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple">
-            <el-form-item label="交付日期:">
-
-              <el-date-picker v-model="filters.dArriveDate" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-                placeholder="选择日期" type="date" unlink-panels range-separator="To" />
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple">
-            <el-form-item label="订单状态:">
-              <el-select v-model="filters.cState" placeholder="选择状态" :loading="ElSelectLoading" style="width: 100%"
-                name="caccid">
-                <el-option v-for="item in dindanList" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple">
-            <el-form-item label="关闭状态:">
-              <el-select v-model="filters.guanbi" placeholder="选择状态" :loading="ElSelectLoading" style="width: 100%"
-                name="caccid">
-                <el-option v-for="item in guanbiList" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>
 
 
 
@@ -114,10 +83,12 @@
           <el-table-column v-for="(item, index) in headerData" :prop="item.defaultname" :key="index" :width="item.width"
             :label="item.name">
             <template #default="scope">
-            <div style="display: flex; align-items: center">
-              <span  style="margin-left: 10px">{{ !moment(scope.row[`${scope.column.property}`], 'YYYY-MM-DDTHH:mm:ss',true).isValid() ? scope.row[`${scope.column.property}`] : moment(scope.row.dDate).format('YYYY-MM-DD')}}</span>
-            </div>
-          </template>
+              <div style="display: flex; align-items: center">
+                <span style="margin-left: 10px">{{ !moment(scope.row[`${scope.column.property}`],
+                  'YYYY-MM-DDTHH:mm:ss', true).isValid() ? scope.row[`${scope.column.property}`] :
+                  moment(scope.row.dDate).format('YYYY-MM-DD')}}</span>
+              </div>
+            </template>
           </el-table-column>
         </el-table>
 
@@ -146,11 +117,11 @@ import { reactive, ref } from 'vue';
 import type { FormProps } from 'element-plus'
 import axios from "axios"
 import { getCurrentInstance } from 'vue';
-import type { HeaderItem } from './query'
+import type { HeaderItem } from '../order/query'
 import { ElMessage, ElLoading } from 'element-plus'
 import { fa } from 'element-plus/es/locale';
 import { stringify } from 'querystring';
-import orderTable from './orderTable.vue'
+import orderTable from '../order/orderTable.vue'
 import { Excel } from '@/utils/exportExcel';
 import moment from "moment"
 
@@ -185,7 +156,7 @@ export default {
       value: () => Date[]; // 假设 getLastWeek 等方法返回 Date 数组
     }
     return { // 返回组件中可使用的属性和方法
-      labelPosition, labelPosition2, formLabelAlign, globalObject,moment
+      labelPosition, labelPosition2, formLabelAlign, globalObject, moment
     };
 
   },
@@ -293,9 +264,9 @@ export default {
         if (cVenCode != null)
           this.SysInfo.cVenCode = cVenCode
 
-          if (roles==null) roles=''
-        if(  roles.includes('admin')  ) 
-            this.SysInfo.cVenCode=''
+        if (roles == null) roles = ''
+        if (roles.includes('admin'))
+          this.SysInfo.cVenCode = ''
 
         let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '" + this.tname + "', '" + this.SysInfo.cUserId + "'")
         const list: any[] = []
@@ -312,11 +283,11 @@ export default {
     async loadData() {
       try {
         this.loading = true;
-        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_cgqr where userId='${this.SysInfo.cUserId}' ${this.SysInfo.cVenCode=='' ? "" :" and cvencode='" + this.SysInfo.cVenCode + "'" }   ${!this.filters.cPOID ? '' : `and cPOID like '%${this.filters.cPOID}%'`}${!this.filters.cVenName ? '' : `and cVenCode like '%${this.filters.cVenName}%'`}${!this.filters.cVenInvCode ? '' : `and cInvCode like '%${this.filters.cVenInvCode}%'`}${!this.filters.cVenInvName ? '' : `and cInvName like '%${this.filters.cVenInvName}%'`}${!this.filters.cState ? '' : `and cState='${this.filters.cState}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dArriveDate ? '' : `and dArriveDate='${this.filters.dArriveDate}'`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime='${this.filters.isconfirmtime}'`}${!this.filters.guanbi ? '' : `and isclose='${this.filters.guanbi}'`}`)
+        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_cgqr where userId='${this.SysInfo.cUserId}' ${this.SysInfo.cVenCode == '' ? "" : " and cvencode='" + this.SysInfo.cVenCode + "'"}   ${!this.filters.cPOID ? '' : `and cPOID like '%${this.filters.cPOID}%'`}${!this.filters.cVenName ? '' : `and cVenCode like '%${this.filters.cVenName}%'`}${!this.filters.cVenInvCode ? '' : `and cInvCode like '%${this.filters.cVenInvCode}%'`}${!this.filters.cVenInvName ? '' : `and cInvName like '%${this.filters.cVenInvName}%'`}${!this.filters.cState ? '' : `and cState='${this.filters.cState}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dArriveDate ? '' : `and dArriveDate='${this.filters.dArriveDate}'`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime='${this.filters.isconfirmtime}'`}${!this.filters.guanbi ? '' : `and isclose='${this.filters.guanbi}'`}`)
         this.total_List = hangshu.data.dataDetail[0].total
         // this.total_List = hangshu.dataDetail[0]
 
-        let res = await this.SqlWork("select", `exec wlzh_pu_cgddxs '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${!this.filters.cPOID ? '' : `and cPOID like ''%${this.filters.cPOID}%''`} ${this.SysInfo.cVenCode=='' ? "" :" and cvencode=''" + this.SysInfo.cVenCode + "''" } ${!this.filters.cVenName ? '' : `and cVenCode like ''%${this.filters.cVenName}%''`}${!this.filters.cVenInvCode ? '' : `and cInvCode like ''%${this.filters.cVenInvCode}%''`}${!this.filters.cVenInvName ? '' : `and cInvName like ''%${this.filters.cVenInvName}%''`}${!this.filters.cState ? '' : `and cState=''${this.filters.cState}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dArriveDate ? '' : `and dArriveDate=''${this.filters.dArriveDate}''`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime=''${this.filters.isconfirmtime}''`}${!this.filters.guanbi ? '' : `and isclose=''${this.filters.guanbi}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
+        let res = await this.SqlWork("select", `exec wlzh_pu_cgddxs '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${!this.filters.cPOID ? '' : `and cPOID like ''%${this.filters.cPOID}%''`} ${this.SysInfo.cVenCode == '' ? "" : " and cvencode=''" + this.SysInfo.cVenCode + "''"} ${!this.filters.cVenName ? '' : `and cVenCode like ''%${this.filters.cVenName}%''`}${!this.filters.cVenInvCode ? '' : `and cInvCode like ''%${this.filters.cVenInvCode}%''`}${!this.filters.cVenInvName ? '' : `and cInvName like ''%${this.filters.cVenInvName}%''`}${!this.filters.cState ? '' : `and cState=''${this.filters.cState}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dArriveDate ? '' : `and dArriveDate=''${this.filters.dArriveDate}''`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime=''${this.filters.isconfirmtime}''`}${!this.filters.guanbi ? '' : `and isclose=''${this.filters.guanbi}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
         this.bodyDataCopypolist_asn = res.data.dataDetail
         this.loading = false;
       } catch (error) {

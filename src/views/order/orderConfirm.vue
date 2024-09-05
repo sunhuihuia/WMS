@@ -66,7 +66,7 @@
     </el-row>
     <el-row class="el-row">
 
-      <el-table style="width: 100%" height="500" v-loading="loading" :data="bodyDataCopypolist_asn"
+      <el-table style="width: 100%" height="80vh" v-loading="loading" :data="bodyDataCopypolist_asn"
         @selection-change="handleSelectionChange" ref="multipleTableRef">
         <el-table-column type="selection" width="55" />
         <el-table-column width="55" prop="xh" label="序号">
