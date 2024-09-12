@@ -105,7 +105,7 @@ import { fa } from 'element-plus/es/locale';
 import type { HeaderItem } from './query'
 
 // import AsnLoadPm from './AsnLoadPm.vue';
-import { webapp_ws_ajax_run,   webapp_urlprotocol_run，urlAddRandomNo } from "@/utils/grwebapp";
+import { webapp_ws_ajax_run,   webapp_urlprotocol_run,urlAddRandomNo } from "@/utils/grwebapp";
  
 
 export default {
