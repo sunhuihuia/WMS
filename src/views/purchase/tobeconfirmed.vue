@@ -120,7 +120,6 @@ import { getCurrentInstance } from 'vue';
 import type { HeaderItem } from '../order/query'
 import { ElMessage, ElLoading } from 'element-plus'
 import { fa } from 'element-plus/es/locale';
-import { stringify } from 'querystring';
 import orderTable from '../order/orderTable.vue'
 import { Excel } from '@/utils/exportExcel';
 import moment from "moment"

@@ -254,8 +254,12 @@ export default {
     cCode: String,
     SysInfo: Object,
   },
-
-
+  watch: {
+    pVouchID(newValue, oldValue) {
+      console.log(newValue, oldValue, 12313133332);
+      this.loadData()
+    }
+  },
   // async mounted(){
   //   console.log('mounted')
   //   const res = await this.SqlWork("select","select null a,2 b" );
@@ -273,7 +277,7 @@ export default {
     };
     this.headerData = this.headerList as HeaderItem[];
     this.loadData()
-    
+
     webapp_urlprotocol_run();
   },
 
@@ -312,8 +316,8 @@ export default {
       this.goPrint(DealType, this.bodyDataCopypolist_asn, ModlePath)
     },
     goPrint(DealType: string, PrintData: any, ModlePath: string) {
-      
-    webapp_urlprotocol_run();
+
+      webapp_urlprotocol_run();
       var json_data = { recordset: [] }
       var recordset = PrintData;
       json_data.recordset = recordset

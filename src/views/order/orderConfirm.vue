@@ -99,12 +99,12 @@
 
 
     <el-dialog v-model="dialogVisible" title="选择栏目" @close="dialogVisible = false" width="70%" :draggable="false">
-      <orderTable @determine="determine" @close="dialogVisible = false" :headerData="headerData" :tame="tname"
+      <orderTable @determine="determine" @close="dialogVisible = false" :destroy-on-close="true" :headerData="headerData" :tame="tname"
         :SysInfo="SysInfo" />
     </el-dialog>
-    <el-dialog v-model="dialogVisible1" title="订单确认" @close="dialogVisible = false" width="70%" :draggable="false">
+    <el-dialog v-model="dialogVisible1" title="订单确认" @close="dialogVisible1 = false" width="70%" :draggable="false">
       <confirmDY @close="dialogVisible1 = false" :pVouchID="pVouchID" :filtersData="filters" :headerList="headerData"
-        :SysInfo="SysInfo" :cCode="cCode" @determine="dialogVisible1 = false" />
+        :SysInfo="SysInfo" :cCode="cCode" @determine="dialogVisible1 = false" :destroy-on-close="true" />
     </el-dialog>
   </div>
 </template>
@@ -210,8 +210,9 @@ export default {
 
   methods: {
     scopeclick(data: any) {
-
-      this.pVouchID = data.row.POID + ""
+      
+      this.pVouchID = data.row.POID + ''
+      console.log(this.pVouchID,12312312);
       this.dialogVisible1 = true
 
     },
