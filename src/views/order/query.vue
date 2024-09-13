@@ -114,10 +114,12 @@
           <el-table-column v-for="(item, index) in headerData" :prop="item.defaultname" :key="index" :width="item.width"
             :label="item.name">
             <template #default="scope">
-            <div style="display: flex; align-items: center">
-              <span  style="margin-left: 10px">{{ !moment(scope.row[`${scope.column.property}`], 'YYYY-MM-DDTHH:mm:ss',true).isValid() ? scope.row[`${scope.column.property}`] : moment(scope.row.dDate).format('YYYY-MM-DD')}}</span>
-            </div>
-          </template>
+              <div style="display: flex; align-items: center">
+                <span style="margin-left: 10px">{{ !moment(scope.row[`${scope.column.property}`],
+                  'YYYY-MM-DDTHH:mm:ss', true).isValid() ? scope.row[`${scope.column.property}`] :
+                  moment(scope.row.dDate).format('YYYY-MM-DD') }}</span>
+              </div>
+            </template>
           </el-table-column>
         </el-table>
 
@@ -185,7 +187,7 @@ export default {
       value: () => Date[]; // 假设 getLastWeek 等方法返回 Date 数组
     }
     return { // 返回组件中可使用的属性和方法
-      labelPosition, labelPosition2, formLabelAlign, globalObject,moment
+      labelPosition, labelPosition2, formLabelAlign, globalObject, moment
     };
 
   },
@@ -293,10 +295,9 @@ export default {
         if (cVenCode != null)
           this.SysInfo.cVenCode = cVenCode
 
-          if (roles==null) roles=''
-        if(  roles.includes('admin')  ) 
-            this.SysInfo.cVenCode=''
-
+        if (roles == null) roles = ''
+        if (roles.includes('admin'))
+          this.SysInfo.cVenCode = ''
         let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '" + this.tname + "', '" + this.SysInfo.cUserId + "'")
         const list: any[] = []
         res.data.dataDetail.forEach((element: any) => {
@@ -312,11 +313,12 @@ export default {
     async loadData() {
       try {
         this.loading = true;
-        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_cgqr where userId='${this.SysInfo.cUserId}' ${this.SysInfo.cVenCode=='' ? "" :" and cvencode='" + this.SysInfo.cVenCode + "'" }   ${!this.filters.cPOID ? '' : `and cPOID like '%${this.filters.cPOID}%'`}${!this.filters.cVenName ? '' : `and cVenCode like '%${this.filters.cVenName}%'`}${!this.filters.cVenInvCode ? '' : `and cInvCode like '%${this.filters.cVenInvCode}%'`}${!this.filters.cVenInvName ? '' : `and cInvName like '%${this.filters.cVenInvName}%'`}${!this.filters.cState ? '' : `and cState='${this.filters.cState}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dArriveDate ? '' : `and dArriveDate='${this.filters.dArriveDate}'`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime='${this.filters.isconfirmtime}'`}${!this.filters.guanbi ? '' : `and isclose='${this.filters.guanbi}'`}`)
+        let hangshu = await this.SqlWork("select", `select count(*) total from wlzh_pu_cgqr where userId='${this.SysInfo.cUserId}' ${this.SysInfo.cVenCode == '' ? "" : " and cvencode='" + this.SysInfo.cVenCode + "'"}   ${!this.filters.cPOID ? '' : `and cPOID like '%${this.filters.cPOID}%'`}${!this.filters.cVenName ? '' : `and cVenCode like '%${this.filters.cVenName}%'`}${!this.filters.cVenInvCode ? '' : `and cInvCode like '%${this.filters.cVenInvCode}%'`}${!this.filters.cVenInvName ? '' : `and cInvName like '%${this.filters.cVenInvName}%'`}${!this.filters.cState ? '' : `and cState='${this.filters.cState}'`}${!this.filters.dPODate ? '' : `and dPODate='${this.filters.dPODate}'`}${!this.filters.dArriveDate ? '' : `and dArriveDate='${this.filters.dArriveDate}'`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime='${this.filters.isconfirmtime}'`}${!this.filters.guanbi ? '' : `and isclose='${this.filters.guanbi}'`}`)
         this.total_List = hangshu.data.dataDetail[0].total
         // this.total_List = hangshu.dataDetail[0]
 
-        let res = await this.SqlWork("select", `exec wlzh_pu_cgddxs '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${!this.filters.cPOID ? '' : `and cPOID like ''%${this.filters.cPOID}%''`} ${this.SysInfo.cVenCode=='' ? "" :" and cvencode=''" + this.SysInfo.cVenCode + "''" } ${!this.filters.cVenName ? '' : `and cVenCode like ''%${this.filters.cVenName}%''`}${!this.filters.cVenInvCode ? '' : `and cInvCode like ''%${this.filters.cVenInvCode}%''`}${!this.filters.cVenInvName ? '' : `and cInvName like ''%${this.filters.cVenInvName}%''`}${!this.filters.cState ? '' : `and cState=''${this.filters.cState}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dArriveDate ? '' : `and dArriveDate=''${this.filters.dArriveDate}''`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime=''${this.filters.isconfirmtime}''`}${!this.filters.guanbi ? '' : `and isclose=''${this.filters.guanbi}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
+        let res = await this.SqlWork("select", `exec wlzh_pu_cgddxs  '${!this.SysInfo.cUserId ? '' : 'and '} userId=''${this.SysInfo.cUserId}'' ${!this.filters.cPOID ? '' : `and cPOID like ''%${this.filters.cPOID}%''`} ${this.SysInfo.cVenCode == '' ? "" : " and cvencode=''" + this.SysInfo.cVenCode + "''"} ${!this.filters.cVenName ? '' : `and cVenCode like ''%${this.filters.cVenName}%''`}${!this.filters.cVenInvCode ? '' : `and cInvCode like ''%${this.filters.cVenInvCode}%''`}${!this.filters.cVenInvName ? '' : `and cInvName like ''%${this.filters.cVenInvName}%''`}${!this.filters.cState ? '' : `and cState=''${this.filters.cState}''`}${!this.filters.dPODate ? '' : `and dPODate=''${this.filters.dPODate}''`}${!this.filters.dArriveDate ? '' : `and dArriveDate=''${this.filters.dArriveDate}''`}${!this.filters.isconfirmtime ? '' : `and isconfirmtime=''${this.filters.isconfirmtime}''`}${!this.filters.guanbi ? '' : `and isclose=''${this.filters.guanbi}''`}' ,${this.pageSize_List},${this.pageNum_List}`)
+
         this.bodyDataCopypolist_asn = res.data.dataDetail
         this.loading = false;
       } catch (error) {
@@ -334,7 +336,25 @@ export default {
       this.loadData();
     },
     async dialogVisibleClick() {
+      let res1 = await this.SqlWork("structure", `exec wlzh_pu_cgddxs  ' and 1=0'`)
       let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '" + this.tname + "', '" + this.SysInfo.cUserId + "'")
+      let result = res1.data.dataDetail.filter((item: any) => {
+        return res.data.dataDetail.every((item1: any) => {
+          return item.ColumnName != item1.field && item.ColumnName != 'xh';
+        })
+      })
+      const list: any = []
+      result.forEach((item: any, index: any) => {
+        list.push({
+          'sfxs': 0,
+          'sortid': res.data.dataDetail.length + 1 + index,
+          'name': item.ColumnName,
+          'field': item.ColumnName,
+          'defaultname': item.ColumnName,
+          'width': '120'
+        })
+      })  
+      res.data.dataDetail.push(...list)
       this.headerData1 = res.data.dataDetail.sort((a: any, b: any) => Number(a.sortid) - Number(b.sortid));
       this.dialogVisible = true;
     },

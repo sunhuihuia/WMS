@@ -317,8 +317,26 @@ export default {
       this.pageNum_List = val;
       this.loadData();
     },
-    async dialogVisibleClick() {
+  async dialogVisibleClick() {
+      let res1 = await this.SqlWork("structure", `exec wlzh_pu_cgddxs  ' and 1=0'`)
       let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '" + this.tname + "', '" + this.SysInfo.cUserId + "'")
+      let result = res1.data.dataDetail.filter((item: any) => {
+        return res.data.dataDetail.every((item1: any) => {
+          return item.ColumnName != item1.field && item.ColumnName != 'xh';
+        })
+      })
+      const list: any = []
+      result.forEach((item: any, index: any) => {
+        list.push({
+          'sfxs': 0,
+          'sortid': res.data.dataDetail.length + 1 + index,
+          'name': item.ColumnName,
+          'field': item.ColumnName,
+          'defaultname': item.ColumnName,
+          'width': '120'
+        })
+      })  
+      res.data.dataDetail.push(...list)
       this.headerData1 = res.data.dataDetail.sort((a: any, b: any) => Number(a.sortid) - Number(b.sortid));
       this.dialogVisible = true;
     },

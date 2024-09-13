@@ -256,7 +256,6 @@ export default {
   },
   watch: {
     pVouchID(newValue, oldValue) {
-      console.log(newValue, oldValue, 12313133332);
       this.loadData()
     }
   },
