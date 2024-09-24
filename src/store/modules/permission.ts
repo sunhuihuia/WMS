@@ -91,7 +91,7 @@ export const usePermissionStore = defineStore("permission", () => {
       listRoutes()
         .then(({ data: asyncRoutes }) => {
           // 根据角色获取有访问权限的路由
-          const accessedRoutes = filterAsyncRoutes(asyncRoutes, roles);
+          const accessedRoutes = [];
           console.log(roles,123123);
           if(roles[0] === 'admin') {
           accessedRoutes.push(...Competence);
