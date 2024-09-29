@@ -19,8 +19,9 @@ const app = createApp(App);
 // 使用一个对象设置多个全局变量
 app.config.globalProperties.$myGlobalObject = {
   message: "Hello, Vue 3!",
-  ApiUrl: "http://shsd666.gnway.org:9999/NewWebApi/api/Values/Work",
-  database: "ufdata_001_2021",
+  ApiUrl: "http://goodgoodstudy.ufyct.com:7575/api/SqlHelp",
+  ApiUrl1: "http://goodgoodstudy.ufyct.com:7575/CjfWebApi/api/Values/Work",
+  database: "ufsystm",
   someMethod: () => {
     // 一些逻辑
   },

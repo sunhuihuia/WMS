@@ -23,6 +23,7 @@ export const useUserStore = defineStore("user", () => {
       loginApi(loginData)
         .then((response) => {
           const { tokenType, accessToken } = response.data;
+          
           localStorage.setItem("accessToken", tokenType + " " + accessToken); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
           resolve();
         })
@@ -61,6 +62,7 @@ export const useUserStore = defineStore("user", () => {
     return new Promise<void>((resolve, reject) => {
       logoutApi()
         .then(() => {
+
           localStorage.setItem("accessToken", "");
           location.reload(); // 清空路由
           resolve();

@@ -6,7 +6,7 @@ import { LanguageEnum } from "./enums/LanguageEnum";
 const { pkg } = __APP_INFO__;
 
 const defaultSettings: AppSettings = {
-  title:"用友SRM", //pkg.name,
+  title:"用友WMS", //pkg.name,
   version: "",
   showSettings: true,
   tagsView: true,

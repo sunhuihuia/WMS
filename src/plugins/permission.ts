@@ -10,6 +10,7 @@ export function setupPermission() {
   router.beforeEach(async (to, from, next) => {
     NProgress.start();
     const hasToken = localStorage.getItem("accessToken");
+    
     if (hasToken) {
       if (to.path === "/login") {
         // 如果已登录，跳转首页
@@ -29,6 +30,8 @@ export function setupPermission() {
           }
         } else {
           const permissionStore = usePermissionStore();
+          console.log(permissionStore);
+          
           try {
             let { roles } = await userStore.getUserInfo();
             console.log('roles',roles);
@@ -38,6 +41,7 @@ export function setupPermission() {
             });
             next({ ...to, replace: true });
           } catch (error) {
+            
             // 移除 token 并跳转登录页
             await userStore.resetToken();
             next(`/login?redirect=${to.path}`);

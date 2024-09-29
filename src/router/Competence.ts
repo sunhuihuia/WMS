@@ -61,7 +61,7 @@ export const Competence = [
   children: [
     {
       always_show: null,
-      component: () => import("/src/views/storeManage/AsnAdd.vue"),
+      component: () => import("/src/views/storeManage/WarehouseWarrant.vue"),
       hidden: false,
       icon: "document",
       id:12,
@@ -80,7 +80,7 @@ export const Competence = [
     },
     {
       always_show: null,
-      component: () => import("/src/views/storeManage/AsnvoucherList.vue"),
+      component: () => import("/src/views/storeManage/WwList.vue"),
       hidden: false,
       icon: "document",
       id: 11,
@@ -118,7 +118,7 @@ export const Competence = [
   children: [
     {
       always_show: null,
-      component: () => import("/src/views/shipOut/AsnAdd.vue"),
+      component: () => import("/src/views/shipOut/OutboundOrder.vue"),
       hidden: false,
       icon: "document",
       id:22,
@@ -137,7 +137,7 @@ export const Competence = [
     },
     {
       always_show: null,
-      component: () => import("/src/views/shipOut/AsnvoucherList.vue"),
+      component: () => import("/src/views/shipOut/OoList.vue"),
       hidden: false,
       icon: "document",
       id: 21,

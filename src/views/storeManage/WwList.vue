@@ -4,22 +4,22 @@
       <el-row class="el-row">
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="ASN单号:">
-              <el-input v-model="filters.ccode" placeholder="请输入ASN单号" />
+            <el-form-item label="单据编号:">
+              <el-input v-model="filters.ccode" placeholder="请输入单据编号" />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple-light">
-            <el-form-item label="存货编码:">
-              <el-input v-model="filters.cinvcode" placeholder="请输入存货编码" />
+            <el-form-item label="单据类型::">
+              <el-input v-model="filters.cinvcode" placeholder="请输入单据类型" />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="存货名称:">
-              <el-input v-model="filters.cinvname" placeholder="请输入存货名称" />
+            <el-form-item label="仓库名称:">
+              <el-input v-model="filters.cinvname" placeholder="请输入仓库名称" />
             </el-form-item>
 
           </div>
@@ -31,7 +31,7 @@
       <el-row class="el-row">
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="ASN单日期:">
+            <el-form-item label="起始日期:">
 
               <el-date-picker v-model="filters.ddate" type="daterange" unlink-panels range-separator="To"
                 start-placeholder="开始日期" end-placeholder="结束日期" :shortcuts="shortcuts" />
@@ -40,18 +40,15 @@
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple-light">
-            <el-form-item label="订单号:">
-              <el-input v-model="filters.cordercode" placeholder="请输入订单号" />
+            <el-form-item label="部门名称:">
+              <el-input v-model="filters.cordercode" placeholder="请输入部门名称" />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple">
-            <el-form-item label="ASN状态:">
-              <el-select v-model="filters.zhuangtai" placeholder="选择状态" :loading="ElSelectLoading" style="width: 100%"
-                name="caccid">
-                <el-option v-for="item in zhuangtaiList" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
+          <div class="grid-content ep-bg-purple-light">
+            <el-form-item label="表头备注:">
+              <el-input v-model="filters.cordercode" placeholder="请输入表头备注" />
             </el-form-item>
           </div>
         </el-col>
@@ -59,31 +56,39 @@
 
       <el-row class="el-row">
         <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple">
-            <el-form-item label="订单日期:">
-
-              <el-date-picker v-model="filters.dpodate" type="daterange" unlink-panels range-separator="To"
-                start-placeholder="开始日期" end-placeholder="结束日期" :shortcuts="shortcuts" />
+          <div class="grid-content ep-bg-purple-light">
+            <el-form-item label="表体备注:">
+              <el-input v-model="filters.cordercode" placeholder="请输入表体备注" />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="供应商编码:">
-              <el-input v-model="filters.cvencode" placeholder="请输入供应商编码" />
+            <el-form-item label="存货编码:">
+              <el-input v-model="filters.cvencode" placeholder="请输入存货编码" />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="供应商名称:">
-              <el-input v-model="filters.cvenabbname" placeholder="模糊查询" />
+            <el-form-item label="客户:">
+              <el-input v-model="filters.cvenabbname" placeholder="客户" />
             </el-form-item>
           </div>
         </el-col>
       </el-row>
 
 
+      <el-row class="el-row">
+        <el-col :span="8" class="el-col">
+          <div class="grid-content ep-bg-purple-light">
+            <el-form-item label="收发类别:">
+              <el-input v-model="filters.cordercode" placeholder="请输入收发类别" />
+            </el-form-item>
+          </div>
+        </el-col>
+  
+      </el-row>
 
       <el-row class="el-row">
         <el-col :span="24" class="el-col">
@@ -106,17 +111,7 @@
       <el-button @click="loadData" type="default" plain> <span>单张预览</span></el-button>   
       </el-tooltip> -->
 
-          <el-dropdown @command="handleDaochu" trigger="click"><el-button type="default" style="margin-left: 10px;">
-              <span>导出</span><el-icon class="el-icon--right"><arrow-down /></el-icon>
-            </el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item command="全部">全部</el-dropdown-item>
-                <el-dropdown-item command="选中">选中</el-dropdown-item>
-                <el-dropdown-item command="本页">本页</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
+          
 
 
         </el-col>
@@ -142,22 +137,22 @@
 
 
           <el-table-column prop="zhuangtai" label="生单状态" width="180" :sortable="true" />
-          <el-table-column prop="cordercode" label="订单号" width="180" :sortable="true" />
-          <el-table-column prop="cinvcode" label="物料编码" width="180" :sortable="true" />
-          <el-table-column prop="cinvname" label="物料名称" width="180" />
-          <el-table-column prop="cinvstd" label="规格型号" width="180" />
-          <el-table-column prop="cinvm_unit" label="主计量单位" width="60" />
-          <el-table-column prop="ipoquantity" label="订单数量" width="120" />
-          <el-table-column prop="iarrqty" label="累计到货数量" width="120" />
-          <el-table-column prop="wdh" label="未到货数量" width="120" />
-          <el-table-column prop="iquantity" label="本次发货数量" width="120">
+          <el-table-column prop="cordercode" label="单据日期" width="180" :sortable="true" />
+          <el-table-column prop="cinvcode" label="收发类别" width="180" :sortable="true" />
+          <el-table-column prop="cinvname" label="客户" width="180" />
+          <el-table-column prop="cinvstd" label="仓库" width="180" />
+          <el-table-column prop="cinvm_unit" label="货位编码" width="60" />
+          <el-table-column prop="ipoquantity" label="存货编码" width="120" />
+          <el-table-column prop="iarrqty" label="存货名称" width="120" />
+          <el-table-column prop="wdh" label="规格型号" width="120" />
+          <el-table-column prop="iquantity" label="计量单位" width="120">
           </el-table-column>
-          <el-table-column prop="frealquantity" label="实收数量" width="120" :sortable="true" />
-          <el-table-column prop="cmemo" label="备注" width="120" :sortable="true" />
-          <el-table-column prop="cdefine28" label="跟单号" width="120" :sortable="true" />
-          <el-table-column prop="dDate" label="日期" width="120">
+          <el-table-column prop="frealquantity" label="批次" width="120" :sortable="true" />
+          <el-table-column prop="cmemo" label="入库数量" width="120" :sortable="true" />
+          <el-table-column prop="cdefine28" label="表头备注" width="120" :sortable="true" />
+          <el-table-column prop="dDate" label="表体备注" width="120">
           </el-table-column>
-          <el-table-column prop="cvenabbname" label="供应商" width="250" :sortable="true" />
+        
         </el-table>
 
       </el-row>
