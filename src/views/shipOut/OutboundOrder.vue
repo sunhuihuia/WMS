@@ -4,21 +4,21 @@
       <el-row class="el-row">
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="ASN单号:">
+            <el-form-item label="单据编号:">
               <el-input v-model="headerData.ccode" disabled />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple-light">
-            <el-form-item label="供应商编码:">
+            <el-form-item label="收发类别:">
               <el-input v-model="headerData.cvencode" disabled />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="供应商名称:">
+            <el-form-item label="单据类型:">
               <el-input v-model="headerData.cvenabbname" disabled />
             </el-form-item>
 
@@ -38,14 +38,14 @@
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple-light">
-            <el-form-item label="到货地址">
+            <el-form-item label="仓库">
               <el-input v-model="headerData.address" disabled />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="到货方式:">
+            <el-form-item label="部门:">
               <el-input v-model="headerData.dhfs" disabled />
             </el-form-item>
           </div>
@@ -55,14 +55,14 @@
       <el-row class="el-row">
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="联系人:">
+            <el-form-item label="供应商:">
               <el-input v-model="headerData.contacts" disabled />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple-light">
-            <el-form-item label="电话">
+            <el-form-item label="ID号">
               <el-input v-model="headerData.phone" disabled />
             </el-form-item>
           </div>
@@ -76,22 +76,6 @@
         </el-col>
       </el-row>
 
-      <el-row class="el-row">
-        <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple">
-            <el-form-item label="发货日期:">
-              <el-date-picker v-model="headerData.fahuori" style="width: 100%" type="date" placeholder="发货日期" />
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple-light">
-            <el-form-item label="预计到货日期:">
-              <el-date-picker v-model="headerData.yujidaohuori" style="width: 100%" type="date" placeholder="预计到货日期" />
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>
 
       <el-row class="el-row">
         <el-col :span="24" class="el-col">
@@ -100,6 +84,9 @@
             <el-button @click="dialogVisible = true"><el-icon>
                 <Plus style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>增加</span></el-button>
+            <el-button @click="dialogVisible = true"><el-icon>
+                <Edit style="width: 10em; height: 10em; margin-right: 0px" />
+              </el-icon><span>修改</span></el-button>
             <el-button @click="delRow"><el-icon>
                 <Delete style="width: 10em; height: 10em; margin-right: 0px" />
               </el-icon><span>删行</span></el-button>
@@ -129,29 +116,16 @@
           <el-table-column prop="cinvcode" label="存货编码" width="180" :sortable="true" />
           <el-table-column prop="cinvname" label="存货名称" width="180" />
           <el-table-column prop="cinvstd" label="规格型号" width="180" />
-          <el-table-column prop="cinvm_unit" label="单位" width="60" />
-          <el-table-column prop="ipoquantity" label="订单数量" width="120" />
-          <el-table-column prop="iarrqty" label="累计到货数量" width="120" />
-          <el-table-column prop="wdhsl" label="未到货数量" width="120" />
-          <el-table-column prop="dfhsl" label="待发货数量" width="120" />
-          <el-table-column prop="iquantity" label="本次发货数量" width="120">
-            <template #default="{ row, $index }">
-              <input v-model="row.iquantity" class="squantity-input" @input="squantityInput(row)" type=text t_value=""
-                o_value=""
-                onkeypress="if(!this.value.match(/^[\+\-]?\d*?\.?\d*?$/))this.value=this.t_value;else this.t_value=this.value;if(this.value.match(/^(?:[\+\-]?\d+(?:\.\d+)?)?$/))this.o_value=this.value"
-                onkeyup="if(!this.value.match(/^[\+\-]?\d*?\.?\d*?$/))this.value=this.t_value;else this.t_value=this.value;if(this.value.match(/^(?:[\+\-]?\d+(?:\.\d+)?)?$/))this.o_value=this.value;"
-                onblur="if(!this.value.match(/^(?:[\+\-]?\d+(?:\.\d+)?|\.\d*?)?$/))this.value=this.o_value;else{if(this.value.match(/^\.\d+$/))this.value=0+this.value;if(this.value.match(/^\.$/))this.value=0;this.o_value=this.value}  " />
-            </template>
-          </el-table-column>
-          <el-table-column prop="darridateb" label="预到货日期" width="120" :sortable="true" />
-          <el-table-column prop="cordercode" label="采购订单号" width="120" :sortable="true" />
-          <el-table-column prop="cdefine28" label="跟单号" width="120" :sortable="true" />
-          <el-table-column prop="cmemo" label="备注" width="120">
-            <template #default="{ row, $index }">
-              <input v-model="row.cmemo" class="squantity-input" type=text />
-            </template>
-          </el-table-column>
-          <el-table-column prop="cvenabbname" label="供应商" width="250" :sortable="true" />
+          <el-table-column prop="cinvm_unit" label="计量单位" width="110" />
+          <el-table-column prop="ipoquantity" label="批次" width="220" />
+          <el-table-column prop="ipoquantity" label="货位编码" width="220" />
+          <el-table-column prop="ipoquantity" label="数量" />
+          <el-table-column prop="zdr" width="180" label="制单人" />
+          <el-table-column prop="zdsj" width="180" label="制单时间" />
+          <el-table-column prop="spr" width="180" label="审核人" />
+          <el-table-column prop="spsj" width="180" label="审核时间" />
+
+
         </el-table>
 
       </el-row>
@@ -215,7 +189,7 @@
               </div>
             </el-col>
             <el-col :span="2" class="el-col">
-              <el-button type="primary" @click="loadData" v-loading.fullscreen.lock="fullscreenLoading" style="100%">
+              <el-button type="primary" @click="loadData" v-loading.fullscreen.lock="fullscreenLoading">
                 查询
               </el-button>
             </el-col>
@@ -422,7 +396,7 @@ export default {
       testObj: { ddate: '' },
       tableData2: [],
       dialogVisible: false,
-      headerData: { ccode: '', cvencode: '', cvenabbname: '', ddate: '', address: '到货地址', dhfs: '到货方式', contacts: '联系人', phone: '电话', cheadmemo: '', fahuori: '', yujidaohuori: '' },
+      headerData: { ccode: '', cvencode: '', cvenabbname: '', ddate: '', address: '仓库', dhfs: '部门', contacts: '供货商', phone: 'ID号', cheadmemo: '', fahuori: '', yujidaohuori: '' },
       bodyData: [],
       bodyDataCopypolist_asn: [],
       filters: {
@@ -488,10 +462,8 @@ export default {
       this.SysInfo.cVenCode = cVenCode
 
 
-    console.log('this.SysInfo.database', this.SysInfo.database)
-    const loading = ElLoading.service({ lock: true, text: 'Loading', background: 'rgba(0, 0, 0, 0.7)', })
 
-    let res = await this.SqlWork("select", "wlzh_ly_getAsntemp '" + this.SysInfo.cUserId + "' ");
+    let res = await this.SqlWork("select", "wlzh_Dz_posDetail '" + this.SysInfo.cUserId + "' ");
     this.bodyData = res.data.dataDetail;
 
     if (res.data.dataDetail.length > 0) {
@@ -501,7 +473,6 @@ export default {
     }
 
 
-    loading.close();
     webapp_urlprotocol_run();
   },
 

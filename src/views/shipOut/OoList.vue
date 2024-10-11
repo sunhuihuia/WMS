@@ -4,13 +4,66 @@
       <el-row class="el-row">
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="ASN单号:">
-              <el-input v-model="filters.ccode" placeholder="请输入ASN单号" />
+            <el-form-item label="单据编号:">
+              <el-input v-model="filters.vouchCode" placeholder="请输入单据编号" />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple-light">
+            <el-form-item label="单据类型::">
+              <el-input v-model="filters.cvouchtype" placeholder="请输入单据类型" />
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="8" class="el-col">
+          <div class="grid-content ep-bg-purple">
+            <el-form-item label="仓库名称:">
+              <el-input v-model="filters.cwhname" placeholder="请输入仓库名称" />
+            </el-form-item>
+
+          </div>
+        </el-col>
+
+      </el-row>
+
+
+      <el-row class="el-row">
+        <el-col :span="8" class="el-col">
+          <div class="grid-content ep-bg-purple">
+            <el-form-item label="起始日期:">
+
+              <el-date-picker v-model="filters.vouchDate" type="daterange" unlink-panels range-separator="To"
+                start-placeholder="开始日期" end-placeholder="结束日期" :shortcuts="shortcuts" />
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="8" class="el-col">
+          <div class="grid-content ep-bg-purple-light">
+            <el-form-item label="部门名称:">
+              <el-input v-model="filters.cdepName" placeholder="请输入部门名称" />
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="8" class="el-col">
+          <div class="grid-content ep-bg-purple-light">
+            <el-form-item label="表头备注:">
+              <el-input v-model="filters.cMemo" placeholder="请输入表头备注" />
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+
+      <el-row class="el-row">
+        <el-col :span="8" class="el-col">
+          <div class="grid-content ep-bg-purple-light">
+            <el-form-item label="表体备注:">
+              <el-input v-model="filters.cbmemo" placeholder="请输入表体备注" />
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="8" class="el-col">
+          <div class="grid-content ep-bg-purple">
             <el-form-item label="存货编码:">
               <el-input v-model="filters.cinvcode" placeholder="请输入存货编码" />
             </el-form-item>
@@ -18,75 +71,27 @@
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="存货名称:">
-              <el-input v-model="filters.cinvname" placeholder="请输入存货名称" />
+            <el-form-item label="客户:">
+              <el-input v-model="filters.ccusname" placeholder="客户" />
             </el-form-item>
-
           </div>
         </el-col>
-
       </el-row>
 
 
       <el-row class="el-row">
-        <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple">
-            <el-form-item label="ASN单日期:">
-
-              <el-date-picker v-model="filters.ddate" type="daterange" unlink-panels range-separator="To"
-                start-placeholder="开始日期" end-placeholder="结束日期" :shortcuts="shortcuts" />
-            </el-form-item>
-          </div>
-        </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple-light">
-            <el-form-item label="订单号:">
-              <el-input v-model="filters.cordercode" placeholder="请输入订单号" />
+            <el-form-item label="收发类别:">
+              <el-input v-model="filters.crdname" placeholder="请输入收发类别" />
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple">
-            <el-form-item label="ASN状态:">
-              <el-select v-model="filters.zhuangtai" placeholder="选择状态" :loading="ElSelectLoading" style="width: 100%"
-                name="caccid">
-                <el-option v-for="item in zhuangtaiList" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </div>
-        </el-col>
+
       </el-row>
 
       <el-row class="el-row">
-        <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple">
-            <el-form-item label="订单日期:">
-
-              <el-date-picker v-model="filters.dpodate" type="daterange" unlink-panels range-separator="To"
-                start-placeholder="开始日期" end-placeholder="结束日期" :shortcuts="shortcuts" />
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple">
-            <el-form-item label="供应商编码:">
-              <el-input v-model="filters.cvencode" placeholder="请输入供应商编码" />
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple">
-            <el-form-item label="供应商名称:">
-              <el-input v-model="filters.cvenabbname" placeholder="模糊查询" />
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>
-
-
-
-      <el-row class="el-row">
-        <el-col :span="24" class="el-col">
+        <el-col :span="22" class="el-col">
 
           <el-button @click="loadData" type="danger"> <span>查询</span></el-button>
           <!-- <el-tooltip
@@ -106,19 +111,12 @@
       <el-button @click="loadData" type="default" plain> <span>单张预览</span></el-button>   
       </el-tooltip> -->
 
-          <el-dropdown @command="handleDaochu" trigger="click"><el-button type="default" style="margin-left: 10px;">
-              <span>导出</span><el-icon class="el-icon--right"><arrow-down /></el-icon>
-            </el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item command="全部">全部</el-dropdown-item>
-                <el-dropdown-item command="选中">选中</el-dropdown-item>
-                <el-dropdown-item command="本页">本页</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
 
 
+
+        </el-col>
+        <el-col :span="2" class="el-col">
+          <el-button @click="dialogVisibleClick" class type='success'>选择栏目</el-button>
         </el-col>
       </el-row>
       <el-row class="el-row">
@@ -127,37 +125,35 @@
           highlight-current-row :row-class-name="tableRowClassName" ref="multipleTableRef" border>
 
           <!-- <el-table-column  prop="selected"  type="selection" width="55" :sortable="true" fixed/> -->
-          <el-table-column prop="cCode" label="单据编号" width="180" :sortable="true">
+          <el-table-column prop="vouchCode" label="单据编号" width="180" :sortable="true">
             <template #default="scope">
               <el-popover effect="light" trigger="hover" placement="top" width="auto">
                 <template #default>
                   <div>双击打开单据</div>
                 </template>
                 <template #reference>
-                  <el-tag>{{ scope.row.cCode }}</el-tag>
+                  <el-tag>{{ scope.row.vouchCode }}</el-tag>
                 </template>
               </el-popover>
             </template>
           </el-table-column>
 
+          <el-table-column prop="vouchDate" label="单据日期" width="180" :sortable="true" />
+          <el-table-column prop="crdname" label="收发类别" width="180" :sortable="true" />
+          <el-table-column prop="ccusname" label="客户" width="180" />
+          <el-table-column prop="cwhname" label="仓库" width="180" />
+          <el-table-column prop="cwhcode" label="货位编码" width="60" />
+          <el-table-column prop="cinvcode" label="存货编码" width="120" />
+          <el-table-column prop="cinvname" label="存货名称" width="120" />
+          <el-table-column prop="cinvstd" label="规格型号" width="120" />
+          <el-table-column prop="cComunitName" label="计量单位" width="120">
+          </el-table-column>
+          <el-table-column prop="cbatch" label="批次" width="120" :sortable="true" />
+          <el-table-column prop="inqty" label="入库数量" width="120" :sortable="true" />
+          <el-table-column prop="cMemo" label="表头备注" width="120" :sortable="true" />
+          <el-table-column prop="cbmemo" label="表体备注" width="120">
+          </el-table-column>
 
-          <el-table-column prop="zhuangtai" label="生单状态" width="180" :sortable="true" />
-          <el-table-column prop="cordercode" label="订单号" width="180" :sortable="true" />
-          <el-table-column prop="cinvcode" label="物料编码" width="180" :sortable="true" />
-          <el-table-column prop="cinvname" label="物料名称" width="180" />
-          <el-table-column prop="cinvstd" label="规格型号" width="180" />
-          <el-table-column prop="cinvm_unit" label="主计量单位" width="60" />
-          <el-table-column prop="ipoquantity" label="订单数量" width="120" />
-          <el-table-column prop="iarrqty" label="累计到货数量" width="120" />
-          <el-table-column prop="wdh" label="未到货数量" width="120" />
-          <el-table-column prop="iquantity" label="本次发货数量" width="120">
-          </el-table-column>
-          <el-table-column prop="frealquantity" label="实收数量" width="120" :sortable="true" />
-          <el-table-column prop="cmemo" label="备注" width="120" :sortable="true" />
-          <el-table-column prop="cdefine28" label="跟单号" width="120" :sortable="true" />
-          <el-table-column prop="dDate" label="日期" width="120">
-          </el-table-column>
-          <el-table-column prop="cvenabbname" label="供应商" width="250" :sortable="true" />
         </el-table>
 
       </el-row>
@@ -174,7 +170,7 @@
     </el-form>
 
     <el-dialog v-model="dialogVisible" title="Asn单维护" @close="closeAsnvoucher" width="70%" :draggable="false">
-      <Asnvoucher  @determine="determine" :pVouchID="VouchID" v-if="dialogVisible" ref="refAsnvoucher">
+      <Asnvoucher @determine="determine" :pVouchID="VouchID" v-if="dialogVisible" ref="refAsnvoucher">
       </Asnvoucher>
       <template #footer>
         <div class="dialog-footer">
@@ -182,6 +178,11 @@
           <el-button type="primary" @click="closeAsnvoucher">确定</el-button>
         </div>
       </template>
+    </el-dialog>
+
+    <el-dialog v-model="dialogVisible1" title="选择栏目" @close="dialogVisible1 = false" width="70%" :draggable="false">
+      <orderTable @determine="determine" @close="dialogVisible1 = false" :destroy-on-close="true"
+        :headerData="headerData" :tame="tname" :SysInfo="SysInfo" />
     </el-dialog>
   </div>
 </template>
@@ -199,10 +200,12 @@ import moment from "moment"
 import { fa } from 'element-plus/es/locale';
 // import AsnLoadPm from './AsnLoadPm.vue';
 import Asnvoucher from './Asnvoucher.vue';
+import orderTable from "@/components/titleBar/orderTable.vue";
 
 export default {
   components: {
-    Asnvoucher
+    Asnvoucher,
+    orderTable
   },
   setup() {
     const instance = getCurrentInstance();
@@ -305,16 +308,16 @@ export default {
 
   data() {
     return {
-
       name: 'John', // Option API：使用 data 方法定义数据
       tTable: reactive({}),
-      testObj: { ddate: '' },
+      testObj: { vouchDate: '' },
       tableData2: [],
       dialogVisible: false,
-      headerData: { ccode: '', cvencode: '', cinvcode: '', cinvname: '', ddate: '', dpodate: '', zhuangtai: '', dhfs: '', contacts: '', phone: '', cheadmemo: '', fahuori: '', yujidaohuori: '' },
+      dialogVisible1: false,
+      headerData: { vouchCode: '', cinvcode: '', cvouchtype: '', cwhname: '', vouchDate: '', dpodate: '', zhuangtai: '', dhfs: '', contacts: '', phone: '', cheadmemo: '', fahuori: '', yujidaohuori: '', cMemo: '', cbmemo: '', crdname: "" },
       bodyData: [],
       bodyDataCopypolist_asn: [],
-      filters: { ccode: '', cordercode: '', cinvstd: '', ddate: ref(''), cvencode: '', cinvcode: '', cinvname: '', dpodate: ref(''), zhuangtai: '', cvenabbname: '' },
+      filters: { vouchCode: '', cdepName: '', cinvstd: '', vouchDate: ref(''), cinvcode: '', cvouchtype: '', cwhname: '', dpodate: ref(''), zhuangtai: '', ccusname: '', cMemo: '', cbmemo: "", crdname: '' },
       pageNum_List: 1,
       pageSize_List: 10,
       total_List: 0,
@@ -330,11 +333,11 @@ export default {
       {
         cUserId: 'demo',
         cVenCode: '-1',
-        database: 'ufdata_002_2019',
+        database: 'ufsystm',
         ApiUrl: '',
-        roles:''
+        roles: ''
       },
-
+      tname: "",
     };
   },
   // async mounted(){
@@ -345,8 +348,8 @@ export default {
   async mounted() {
     console.log('mounted')
 
-    const database = sessionStorage.getItem('cDatabase')
-    const cUserId = sessionStorage.getItem('username')    
+    const database = null
+    const cUserId = sessionStorage.getItem('username')
     const cVenCode = sessionStorage.getItem('cVenCode')
     var roles = sessionStorage.getItem('roles')
 
@@ -359,18 +362,18 @@ export default {
     if (cUserId != null)
       this.SysInfo.cUserId = cUserId
 
-      if (cVenCode != null)
+    if (cVenCode != null)
       this.SysInfo.cVenCode = cVenCode
 
-      if (roles==null) roles=''
+    if (roles == null) roles = ''
 
     console.log('this.SysInfo.database', this.SysInfo.database)
     console.log('this.SysInfo.cUserId', this.SysInfo.cUserId)
     console.log('this.SysInfo.cVenCode', this.SysInfo.cVenCode)
     console.log('roles', roles)
 
-    if(  roles.includes('admin')  ) 
-    this.SysInfo.cVenCode=''
+    if (roles.includes('admin'))
+      this.SysInfo.cVenCode = ''
 
     // const loading = ElLoading.service({lock: true,text: 'Loading',background: 'rgba(0, 0, 0, 0.7)',})
 
@@ -406,7 +409,7 @@ export default {
     },
     async loadData() {
       try {
-        console.log('this.filters.ddate', this.filters.ddate)
+        console.log('this.filters.vouchDate', this.filters.vouchDate)
         //let res = await this.testSqlWork4()
         // const loading = ElLoading.service({lock: true,text: 'Loading',background: 'rgba(0, 0, 0, 0.7)',})
         //   const loading = ElLoading.service({
@@ -416,54 +419,55 @@ export default {
         // })
 
         //this.fullscreenLoading = true;
-        const loading = ElLoading.service({ lock: true, text: 'Loading', background: 'rgba(0, 0, 0, 0.7)', })
+        // const loading = ElLoading.service({ lock: true, text: 'Loading', background: 'rgba(0, 0, 0, 0.7)', })
 
         var filterStr = "  ";
 
-        if (this.SysInfo.cVenCode != '') {
-          filterStr += " and a.cvencode=''" + this.SysInfo.cVenCode + "''";
+        if (this.filters.ccusname != '') {
+          filterStr += (filterStr !== "  " ? 'and ' : "where ") + " ccusname like '%" + this.filters.ccusname + "%'"
         }
-        if (this.filters.cvenabbname != '') {
-          filterStr += " and v.cvenabbname like ''%" + this.filters.cvenabbname + "%''"
-        }
-        if (this.filters.zhuangtai != '') {
-          filterStr += " and (case when b.fRealQuantity is null then ''未生单'' else ''已生单'' end)=''" + this.filters.zhuangtai + "''"
-        }
-        if (this.filters.cinvcode != '') {
-          filterStr += " and b.cinvcode = ''" + this.filters.cinvcode + "''"
+        if (this.filters.cvouchtype != '') {
+          filterStr += (filterStr !== "  " ? 'and ' : "where ") + "  cvouchtype = '" + this.filters.cvouchtype + "'"
         }
 
-        if (this.filters.cinvname != '') {
-          filterStr += " and i.cinvname like ''%" + this.filters.cinvname + "%''"
+        if (this.filters.cwhname != '') {
+          filterStr += (filterStr !== "  " ? 'and ' : "where ") + "  cwhname like '%" + this.filters.cwhname + "%'"
         }
 
         if (this.filters.cinvstd != '') {
-          filterStr += " and i.cinvstd like ''%" + this.filters.cinvstd + "%''"
+          filterStr += (filterStr !== "  " ? 'and ' : "where ") + "  cinvstd like '%" + this.filters.cinvstd + "%'"
         }
-        if (this.filters.ddate && this.filters.ddate.length > 0) {
-          filterStr += " and a.ddate between ''" + moment(this.filters.ddate[0]).format('YYYY-MM-DD') + "'' and ''" + moment(this.filters.ddate[1]).format('YYYY-MM-DD') + "''"
+        if (this.filters.vouchDate && this.filters.vouchDate.length > 0) {
+          filterStr += (filterStr !== "  " ? 'and ' : "where ") + "  vouchDate between '" + moment(this.filters.vouchDate[0]).format('YYYY-MM-DD') + "' and '" + moment(this.filters.vouchDate[1]).format('YYYY-MM-DD') + "'"
         }
 
         if (this.filters.dpodate && this.filters.dpodate.length > 0) {
-          filterStr += " and pm.cpodate between ''" + moment(this.filters.dpodate[0]).format('YYYY-MM-DD') + "'' and ''" + moment(this.filters.dpodate[1]).format('YYYY-MM-DD') + "''"
+          filterStr += (filterStr !== "  " ? 'and ' : "where ") + "  cpodate between '" + moment(this.filters.dpodate[0]).format('YYYY-MM-DD') + "' and '" + moment(this.filters.dpodate[1]).format('YYYY-MM-DD') + "'"
         }
-        if (this.filters.cordercode != '') {
-          filterStr += " and pm.cpoid=''" + this.filters.cordercode + "''"
-        }
-        if (this.filters.ccode != '') {
-          filterStr += " and a.ccode=''" + this.filters.ccode + "''"
-        }
-        //console.log (filterStr)
 
+        if (this.filters.vouchCode != '') {
+          filterStr += (filterStr !== "  " ? 'and ' : "where ") + "  vouchCode='" + this.filters.vouchCode + "'"
+        }
+        if (this.filters.crdname != '') {
+          filterStr += (filterStr !== "  " ? 'and ' : "where ") + "  crdname='" + this.filters.crdname + "'"
+        }
+        if (this.filters.cbmemo != '') {
+          filterStr += (filterStr !== "  " ? 'and ' : "where ") + "  cbmemo='" + this.filters.cbmemo + "'"
+        }
+        if (this.filters.cMemo != '') {
+          filterStr += (filterStr !== "  " ? 'and ' : "where ") + "  cMemo=''" + this.filters.cMemo + "'"
+        }
+        console.log(filterStr, 12312312312)
+        let sql = filterStr !== "  " ? " select * from wlzh_Dz_posDetail " + filterStr : "select * from wlzh_Dz_posDetail"
 
-        let res = await this.SqlWork("select", "wlzh_ly_getAsnlist  '" + filterStr + "','" + this.SysInfo.cUserId + "' ")
+        let res = await this.SqlWork("select", sql)
 
         console.log(res.data)
         this.bodyData = res.data.dataDetail
         this.total_List = this.bodyData.length;
-        // this.formLabelAlign2={ddate:'3333'}
+        // this.formLabelAlign2={vouchDate:'3333'}
         // console.log('formLabelAlign2  xxxx',this.formLabelAlign2 );
-        loading.close()
+        // loading.close()
         //this.fullscreenLoading = false;
       } catch (error) {
         console.error(error);
@@ -529,7 +533,7 @@ export default {
             data.iposid == item.iposid
           )
           if (index == -1) {
-            let res = await this.SqlWork("select", "insert into wlzh_asntemp(iposid,cinvcode,cuser_id,cvencode,dtime,bqty,dArriveDate) select id,cinvcode,'" + this.SysInfo.cUserId + "'," + item.cvencode + ",getdate()," + item.bqty + ",dArriveDate from po_podetails pd   where id=" + item.iposid + " select @@identity id")
+            let res = await this.SqlWork("select", "insert into wlzh_asntemp(iposid,cvouchtype,cuser_id,cinvcode,dtime,bqty,dArriveDate) select id,cvouchtype,'" + this.SysInfo.cUserId + "'," + item.cinvcode + ",getdate()," + item.bqty + ",dArriveDate from po_podetails pd   where id=" + item.iposid + " select @@identity id")
             var id = res.data.dataDetail[0].id
             newitem.id = id
             this.bodyData.push(newitem as never)
