@@ -34,7 +34,7 @@ const props = defineProps<{
 const headerData = ref(JSON.parse(JSON.stringify(props.headerData)))
 const tname = ref(props.tame);
 const userListRef = ref()
-console.log(props,'propspropspropspropsprops')
+console.log(props, 'propspropspropspropsprops')
 const instance = getCurrentInstance();
 const globalObject =
   instance?.appContext.config.globalProperties.$myGlobalObject;
@@ -152,7 +152,7 @@ const SqlWork = async (CommandType: string, SqlsStr: string) => {
     <el-table :data="headerData" @selection-change="toggleAllSelection" ref="userListRef"
       @select="handleSelectionChange">
       <el-table-column type="selection" width="55" />
-      <el-table-column v-for="(item, index) in tableData" :prop="item.name" :key="index" :label="item.label">
+      <el-table-column v-for="(item, index) in tableData" :prop="item.name" :key="index" :label="item.label" width="200" >
         <template #default="scope">
           <el-input :disabled="item.name == 'field'" v-model="scope.row[item.name]" />
         </template>
@@ -183,4 +183,8 @@ const SqlWork = async (CommandType: string, SqlsStr: string) => {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.el-table--large .cell) {
+  padding: 0 8px !important;
+}
+</style>
