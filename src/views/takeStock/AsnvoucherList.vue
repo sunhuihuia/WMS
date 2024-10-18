@@ -12,8 +12,7 @@
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple-light">
             <el-form-item label="单据类型:">
-              <el-select v-model="filters.cvouchtype" clearable filterable placeholder="请输入单据类型"
-                style="width: 100%;background:red">
+              <el-select v-model="filters.cvouchtype" clearable filterable placeholder="请输入单据类型">
                 <el-option v-for="item in cvouchtypeList" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
@@ -22,8 +21,7 @@
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
             <el-form-item label="仓库名称:">
-              <el-select v-model="filters.cwhname" clearable filterable placeholder="请输入仓库名称"
-                style="width: 100%;background:red">
+              <el-select v-model="filters.cwhname" clearable filterable placeholder="请输入仓库名称">
                 <el-option v-for="item in cwhnameList" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
@@ -46,8 +44,7 @@
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple-light">
             <el-form-item label="部门名称:">
-              <el-select v-model="filters.cdepName" clearable filterable placeholder="请输入部门名称"
-                style="width: 100%;background:red">
+              <el-select v-model="filters.cdepName" clearable filterable placeholder="请输入部门名称">
                 <el-option v-for="item in cdepNameList" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
@@ -73,15 +70,14 @@
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
             <el-form-item label="存货编码:">
-              <el-input v-model="filters.cbmemo" placeholder="请输入存货编码" />
+              <el-input v-model="filters.cinvcode" @focus="cinvcodeFocus" placeholder="请输入存货编码" />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
             <el-form-item label="客户:">
-              <el-select v-model="filters.ccusname" clearable filterable placeholder="请输入客户名称"
-                style="width: 100%;background:red">
+              <el-select v-model="filters.ccusname" clearable filterable placeholder="请输入客户名称">
                 <el-option v-for="item in ccusnameList" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
@@ -94,8 +90,7 @@
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple-light">
             <el-form-item label="收发类别:">
-              <el-select v-model="filters.crdname" clearable filterable placeholder="请输入收发类别"
-                style="width: 100%;background:red">
+              <el-select v-model="filters.crdname" clearable filterable placeholder="请输入收发类别">
                 <el-option v-for="item in crdnameList" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
@@ -105,7 +100,7 @@
       </el-row>
 
       <el-row class="el-row">
-        <el-col :span="22" class="el-col">
+        <el-col :span="2" class="el-col">
 
           <el-button @click="loadData" type="danger"> <span>查询</span></el-button>
           <!-- <el-tooltip
@@ -129,13 +124,18 @@
 
 
         </el-col>
-        <el-col :span="2" class="el-col">
+        <el-col :span="20" class="el-col">
           <el-button @click="dialogVisibleClick" class type='success'>选择栏目</el-button>
+        </el-col>
+        <el-col :span="2" class="el-col">
+          <el-button @click="uploadClick" class type='primary'><el-icon>
+              <Upload />
+            </el-icon>上传附件</el-button>
         </el-col>
       </el-row>
       <el-row class="el-row">
 
-        <el-table v-if="!headerData1.length" :data="fiterBodyData_List()" @row-dblclick="handleTbRowDbClick"
+        <el-table v-if="!headerData1.length" :data="fiterBodyData_List()" @row-dblclick="handleRowDoubleClick"
           style="width: 100%" highlight-current-row :row-class-name="tableRowClassName" ref="multipleTableRef" border>
 
           <!-- <el-table-column  prop="selected"  type="selection" width="55" :sortable="true" fixed/> -->
@@ -158,8 +158,8 @@
           <el-table-column prop="cbmemo" label="表体备注" width="120">
           </el-table-column>
         </el-table>
-        <el-table v-if="headerData1.length" :data="fiterBodyData_List()" style="width: 100%" highlight-current-row
-          ref="multipleTableRef" border>
+        <el-table v-if="headerData1.length" @row-dblclick="handleRowDoubleClick" :data="fiterBodyData_List()"
+          style="width: 100%" highlight-current-row ref="multipleTableRef" border>
           <el-table-column v-for="(item, index) in headerData1" :prop="item.defaultname" :key="index"
             :width="item.width" :label="item.name">
           </el-table-column>
@@ -177,20 +177,18 @@
 
     </el-form>
 
-    <el-dialog v-model="dialogVisible" title="Asn单维护" @close="closeAsnvoucher" width="70%" :draggable="false">
-      <Asnvoucher @determine="determine" :pVouchID="VouchID" v-if="dialogVisible" ref="refAsnvoucher">
-      </Asnvoucher>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="closeAsnvoucher">确定</el-button>
-        </div>
-      </template>
+    <el-dialog v-model="dialogVisible" title="存货编码" @close="dialogVisible = false" width="70%" :draggable="false">
+      <cinvcodeDialog @recognize="recognize" @determine="determine" @close="close"  v-if="dialogVisible" ref="refAsnvoucher">
+      </cinvcodeDialog>
+ 
     </el-dialog>
 
     <el-dialog v-model="dialogVisible1" title="选择栏目" @close="dialogVisible1 = false" width="70%" :draggable="false">
       <orderTable @determine="determine" @close="dialogVisible1 = false" :destroy-on-close="true"
         :headerData="headerData2" :tame="tname" :SysInfo="SysInfo" />
+    </el-dialog>
+    <el-dialog v-model="dialogVisible2" title="选择栏目" @close="dialogVisible1 = false" width="70%" :draggable="false">
+      <SingleUpload  />
     </el-dialog>
   </div>
 </template>
@@ -207,14 +205,17 @@ import { v4 as uuidv4 } from 'uuid'
 import moment from "moment"
 import { fa } from 'element-plus/es/locale';
 // import AsnLoadPm from './AsnLoadPm.vue';
-import Asnvoucher from './Asnvoucher.vue';
+import cinvcodeDialog from '../shipOut/cinvcodeDialog.vue';
 import orderTable from "@/components/titleBar/orderTable.vue";
 import type { HeaderItem } from '@/utils/query'
+import SingleUpload from '@/components/Upload/SingleUpload.vue'
+import router from '@/router';
 
 export default {
   components: {
-    Asnvoucher,
-    orderTable
+    cinvcodeDialog,
+    orderTable,
+    SingleUpload
   },
   setup() {
     const instance = getCurrentInstance();
@@ -323,6 +324,7 @@ export default {
       tableData2: [],
       dialogVisible: false,
       dialogVisible1: false,
+      dialogVisible2: false,
       headerData: { vouchCode: '', cinvcode: '', cvouchtype: '', cwhname: '', vouchDate: '', dpodate: '', zhuangtai: '', dhfs: '', contacts: '', phone: '', cheadmemo: '', fahuori: '', yujidaohuori: '', cMemo: '', cbmemo: '', crdname: "" },
       bodyData: [],
       bodyDataCopypolist_asn: [],
@@ -368,7 +370,7 @@ export default {
         ApiUrl: '',
         roles: ''
       },
-      tname: "OoList",
+      tname: "takeStockAsnvoucherList",
     };
   },
   // async mounted(){
@@ -494,6 +496,9 @@ select crdcode,crdname from  wlzh_v_Rd_Style`)
       this.headerData2 = res.data.sort((a: any, b: any) => Number(a.sortid) - Number(b.sortid));
       this.dialogVisible1 = true;
     },
+    cinvcodeFocus(){
+      this.dialogVisible = true
+    },
     determine() {
       this.handle()
       this.loadData()
@@ -501,6 +506,9 @@ select crdcode,crdname from  wlzh_v_Rd_Style`)
     },
     handleDaochu(command: string) {
       ElMessage(`click on item ${command}`)
+    },
+    uploadClick() {
+      this.dialogVisible2 = true
     },
     async loadData() {
       try {
@@ -535,6 +543,9 @@ select crdcode,crdname from  wlzh_v_Rd_Style`)
         if (this.filters.cinvstd) {
           filterStr += (filterStr !== "  " ? 'and ' : "where ") + "  cinvstd= '" + this.filters.cinvstd + "'"
         }
+        if (this.filters.cinvcode) {
+          filterStr += (filterStr !== "  " ? 'and ' : "where ") + "  cinvcode= '" + this.filters.cinvcode + "'"
+        }
         if (this.filters.vouchDate && this.filters.vouchDate.length > 0) {
           filterStr += (filterStr !== "  " ? 'and ' : "where ") + "  vouchDate between '" + moment(this.filters.vouchDate[0]).format('YYYY-MM-DD') + "' and '" + moment(this.filters.vouchDate[1]).format('YYYY-MM-DD') + "'"
         }
@@ -562,10 +573,6 @@ select crdcode,crdname from  wlzh_v_Rd_Style`)
         console.log(res.data)
         this.bodyData = res.data
         this.total_List = this.bodyData.length;
-        // this.formLabelAlign2={vouchDate:'3333'}
-        // console.log('formLabelAlign2  xxxx',this.formLabelAlign2 );
-        // loading.close()
-        //this.fullscreenLoading = false;
       } catch (error) {
         console.error(error);
       }
@@ -615,34 +622,7 @@ select crdcode,crdname from  wlzh_v_Rd_Style`)
     closeAsnvoucher() {
       this.dialogVisible = false
     },
-    async confirm() {
-      try {
-        const loading = ElLoading.service({ lock: true, text: 'Loading', background: 'rgba(0, 0, 0, 0.7)', })
-
-        this.multipleSelection_List.forEach(async (item: any) => {
-          var newitem = JSON.parse(JSON.stringify(item))
-          var index = this.bodyData.findIndex((data: any) =>
-            data.iposid == item.iposid
-          )
-          if (index == -1) {
-            let res = await this.SqlWork("select", "insert into wlzh_asntemp(iposid,cvouchtype,cuser_id,cinvcode,dtime,bqty,dArriveDate) select id,cvouchtype,'" + this.SysInfo.cUserId + "'," + item.cinvcode + ",getdate()," + item.bqty + ",dArriveDate from po_podetails pd   where id=" + item.iposid + " select @@identity id")
-            var id = res.data.id
-            newitem.id = id
-            this.bodyData.push(newitem as never)
-
-          }
-
-          var item2: any = this.bodyDataCopypolist_asn.find((data: any) =>
-            data.iposid == item.iposid
-          )
-          item2.selected = true
-        })
-        this.dialogVisible = false
-        loading.close();
-      } catch (error) {
-        console.error(error);
-      }
-    },
+  
     async handle() {
       try {
         const database = sessionStorage.getItem('cDatabase')
@@ -682,13 +662,21 @@ select crdcode,crdname from  wlzh_v_Rd_Style`)
 
       }
     },
-    handleTbRowDbClick(row: any) {
-      console.log(row)
-      this.VouchID = row.id
-
-      this.dialogVisible = true
+    recognize(value:any){
+      this.filters.cinvcode = value.cinvname
+      this.dialogVisible = false
     },
+    handleRowDoubleClick(row: any) {
+      console.log(row, this.$router, 12312312321)
+      router.push({ path: "/shipOut/warehouse", query: {} });
+      // this.VouchID = row.id
 
+      // this.dialogVisible = true
+    },
+    close(){
+      this.dialogVisible = false
+
+    },
     isNumeric(char: any): boolean {
       // 正则表达式匹配数字，包括整数、浮点数以及正负号
       const numericPattern = /^[0-9]+(\.[0-9]*)?$/;
@@ -701,21 +689,31 @@ select crdcode,crdname from  wlzh_v_Rd_Style`)
 }
 </script>
 <style lang="scss" scoped>
-.el-row {
-  margin-bottom: 5px;
-}
-
 .el-row:last-child {
   margin-bottom: 0;
 }
 
 .el-col {
   border-radius: 4px;
+  height: 48px;
+}
+
+:deep(.el-input--large) {
+  height: 32px;
+}
+
+:deep(.el-select__wrapper) {
+  height: 32px;
+  min-height: 0;
+}
+:deep(.el-date-editor) {
+  height: 32px;
+  min-height: 0;
 }
 
 .grid-content {
   border-radius: 4px;
-  min-height: 36px;
+  min-height: 24x;
   margin-right: 20px
 }
 

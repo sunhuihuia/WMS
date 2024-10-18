@@ -953,9 +953,7 @@ export default {
 
 
 <style lang="scss" scoped>
-.el-row {
-  margin-bottom: 5px;
-}
+
 
 .el-row:last-child {
   margin-bottom: 0;
