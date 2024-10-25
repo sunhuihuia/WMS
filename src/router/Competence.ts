@@ -251,7 +251,7 @@ export const Competence = [
   children: [
     {
       always_show: null,
-      component: () => import("/src/views/lending/AsnAdd.vue"),
+      component: () => import("/src/views/lending/LendingAdd.vue"),
       hidden: false,
       icon: "document",
       id:42,
@@ -270,7 +270,7 @@ export const Competence = [
     },
     {
       always_show: null,
-      component: () => import("/src/views/lending/AsnvoucherList.vue"),
+      component: () => import("/src/views/lending/LendingList.vue"),
       hidden: false,
       icon: "document",
       id: 41,

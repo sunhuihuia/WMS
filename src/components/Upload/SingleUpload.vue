@@ -1,77 +1,110 @@
 <template>
-  <!-- 上传组件 -->
-  <el-upload
-    v-model="imgUrl"
-    class="single-uploader"
-    :show-file-list="false"
-    list-type="picture-card"
-    :before-upload="handleBeforeUpload"
-    :http-request="uploadFile"
-  >
-    <img v-if="imgUrl" :src="imgUrl" class="single-uploader__image" />
-    <el-icon v-else class="single-uploader__icon"><i-ep-plus /></el-icon>
+  <el-upload v-model:file-list="fileList" class="upload-demo" :http-request="UploadFile" multiple
+    :on-preview="handlePreview" :on-remove="handleRemove" :data="urlData" :before-remove="beforeRemove"
+    accept=".zip, .rar, .jpg,.png ,.xls,.xlsl ,.word ,.pdf,.xlsx">
+    <el-button type="primary">上传附件</el-button>
+
   </el-upload>
 </template>
+<script lang="ts" setup>
+import { ref } from 'vue'
+import axios from "axios"
 
-<script setup lang="ts">
-import { UploadRawFile, UploadRequestOptions } from "element-plus";
-import { uploadFileApi } from "@/api/file";
+import { ElMessage, ElMessageBox } from 'element-plus'
 
-const props = defineProps({
-  modelValue: {
-    type: String,
-    default: "",
-  },
-});
+import type { UploadProps, UploadUserFile } from 'element-plus'
 
-const emit = defineEmits(["update:modelValue"]);
-const imgUrl = useVModel(props, "modelValue", emit);
-
-/**
- * 自定义图片上传
- *
- * @param options
- */
-async function uploadFile(options: UploadRequestOptions): Promise<any> {
-  const { data: fileInfo } = await uploadFileApi(options.file);
-  imgUrl.value = fileInfo.url;
+const instance = getCurrentInstance();
+const globalObject = instance?.appContext.config.globalProperties.$myGlobalObject
+const database = sessionStorage.getItem('cDatabase')
+const cUserId = sessionStorage.getItem('username')
+const cVenCode = sessionStorage.getItem('cVenCode')
+const props = defineProps<{
+  headerData:any;
+}>();
+const fileList = ref<UploadUserFile[]>([
+])
+interface IParameters {
+  vouchtype: string;
+  ccode: number;
+  autoid: number;
+  maker: string | null;
+}
+interface IUploadFile {
+  vouchtype: string;
+  ccode: number;
+  autoid: number;
+  maker: string | null;
+  filename: string
+}
+interface onPreview {
+  vouchtype: string;
+  ccode: number;
+  autoid: number;
+  maker: string | null;
+  filename: string;
+  filepath: string;
+}
+const urlData = ref({})
+const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
+  console.log(file, uploadFiles)
+}
+const handlePreview = (uploadFile: onPreview) => {
+  // 假设这是你要下载的文件URL
+  const fileUrl = `http://goodgoodstudy.ufyct.com:7575${uploadFile.filepath}`;
+  const link = document.createElement('a');
+  link.style.display = 'none'; // 隐藏a标签
+  link.href = fileUrl;
+  link.download = uploadFile.filename;
+  document.body.appendChild(link); // 将a标签添加到body中
+  link.click(); // 模拟点击
+  document.body.removeChild(link); // 移除a标签
 }
 
-/**
- * 限制用户上传文件的格式和大小
- */
-function handleBeforeUpload(file: UploadRawFile) {
-  if (file.size > 200 * 1048 * 1048) {
-    ElMessage.warning("上传图片不能大于200M");
-    return false;
+const load = async () => {
+  const SqlsStr = `select  gid,filename name ,filepath ,vouchtype ,ccode ,autoid ,maker ,maketime ,ip ,dataname   from  wlzh_Dz_UploadFile where ccode='${props.headerData.vouchCode}' and vouchtype='${props.headerData.vouchtype}'`
+  const res = await SqlWork('select', SqlsStr)
+  fileList.value = res?.data
+
+}
+const UploadFile = async (options: any) => {
+  const formData = new FormData()
+  formData.append('file', options.file)
+  const res = await axios.post(`http://goodgoodstudy.ufyct.com:7575/api/UploadFile?vouchtype=${props.headerData.vouchtype}&ccode=${props.headerData.vouchCode}&autoid=${props.headerData.autoid}&maker=${cUserId}`, formData)
+  console.log(res);
+}
+
+const SqlWork = async (CommandType: string, SqlsStr: string) => {
+  try {
+    console.log(SqlsStr);
+    const res = await axios.post(globalObject.ApiUrl,
+      {
+        "CommandType": CommandType, "database": database,
+        "SqlsStr": SqlsStr
+      });
+    //console.log(res); 
+    //    this.tTable =res.data.dataDetail[0];
+    //   console.log(this.tTable);
+    return res
+  } catch (error) {
+    console.error(error);
   }
-  return true;
 }
+const beforeRemove = (uploadFile: IUploadFile) => {
+  console.log(uploadFile);
+
+  return ElMessageBox.confirm(
+    `是否删除 ${uploadFile.filename} ?`
+  ).then(
+    async () => {
+      const SqlsStr = `delete wlzh_Dz_UploadFile where vouchtype='${uploadFile.vouchtype}' `
+      const res = await SqlWork('select', SqlsStr)
+      return true
+    },
+    () => false
+  )
+}
+onMounted(() => {
+  load()
+})
 </script>
-
-<style scoped lang="scss">
-.single-uploader {
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px var(--el-border-color) solid;
-  border-radius: 6px;
-
-  &:hover {
-    border-color: var(--el-color-primary);
-  }
-
-  &__image {
-    display: block;
-    width: 178px;
-    height: 178px;
-  }
-
-  &___icon {
-    width: 178px;
-    height: 178px;
-    font-size: 28px;
-    color: #8c939d;
-    text-align: center;
-  }
-}
-</style>

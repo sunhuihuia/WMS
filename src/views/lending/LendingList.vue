@@ -100,7 +100,7 @@
       </el-row>
 
       <el-row class="el-row">
-        <el-col :span="2" class="el-col">
+        <el-col :span="22" class="el-col">
 
           <el-button @click="loadData" type="danger"> <span>查询</span></el-button>
           <!-- <el-tooltip
@@ -124,14 +124,10 @@
 
 
         </el-col>
-        <el-col :span="20" class="el-col">
+        <el-col :span="2" class="el-col">
           <el-button @click="dialogVisibleClick" class type='success'>选择栏目</el-button>
         </el-col>
-        <el-col :span="2" class="el-col">
-          <el-button @click="uploadClick" class type='primary'><el-icon>
-              <Upload />
-            </el-icon>上传附件</el-button>
-        </el-col>
+
       </el-row>
       <el-row class="el-row">
 
@@ -144,18 +140,27 @@
           </el-table-column>
           <el-table-column prop="vouchDate" label="单据日期" width="180" :sortable="true" />
           <el-table-column prop="crdname" label="收发类别" width="180" :sortable="true" />
-          <el-table-column prop="ccusname" label="客户" width="180" />
-          <el-table-column prop="cwhname" label="仓库" width="180" />
-          <el-table-column prop="cwhcode" label="货位编码" width="60" />
-          <el-table-column prop="cinvcode" label="存货编码" width="120" />
-          <el-table-column prop="cinvname" label="存货名称" width="120" />
-          <el-table-column prop="cinvstd" label="规格型号" width="120" />
-          <el-table-column prop="cComunitName" label="计量单位" width="120">
+          <el-table-column prop="cSource" label="来源单据" width="180" />
+          <el-table-column prop="cMemo" label="表头备注" width="180" />
+          <el-table-column prop="cvencode" label="供应商编码" width="60" />
+          <el-table-column prop="cVenName" label="供应商" width="120" />
+          <el-table-column prop="cwhcode" label="仓库编码" width="120" />
+          <el-table-column prop="cWhName" label="仓库" width="120" />
+          <el-table-column prop="cposcode" label="货位编码" width="120" />
+          <el-table-column prop="cinvcode" label="存货编码" width="120">
           </el-table-column>
-          <el-table-column prop="cbatch" label="批次" width="120" :sortable="true" />
-          <el-table-column prop="inqty" label="入库数量" width="120" :sortable="true" />
-          <el-table-column prop="cMemo" label="表头备注" width="120" :sortable="true" />
-          <el-table-column prop="cbmemo" label="表体备注" width="120">
+          <el-table-column prop="cInvName" label="存货名称" width="120" :sortable="true" />
+          <el-table-column prop="cInvStd" label="规格型号" width="120" :sortable="true" />
+          <el-table-column prop="cComUnitCode" label="计量单位编码" width="120" :sortable="true" />
+          <el-table-column prop="cComUnitName" label="计量单位" width="120"></el-table-column>
+
+          <el-table-column prop="cbatch" label="批次" width="120"> </el-table-column>
+
+          <el-table-column prop="outqty" label="出库数量" width="120"> </el-table-column>
+
+          <el-table-column prop="inqty" label="入库数量" width="120"> </el-table-column>
+
+          <el-table-column prop="cbMemo" label="表体备注" width="120">
           </el-table-column>
         </el-table>
         <el-table v-if="headerData1.length" @row-dblclick="handleRowDoubleClick" :data="fiterBodyData_List()"
@@ -178,18 +183,17 @@
     </el-form>
 
     <el-dialog v-model="dialogVisible" title="存货编码" @close="dialogVisible = false" width="70%" :draggable="false">
-      <cinvcodeDialog @recognize="recognize" @determine="determine" @close="close"  v-if="dialogVisible" ref="refAsnvoucher">
+      <cinvcodeDialog @recognize="recognize" @determine="determine" @close="close" v-if="dialogVisible"
+        ref="refAsnvoucher">
       </cinvcodeDialog>
- 
+
     </el-dialog>
 
     <el-dialog v-model="dialogVisible1" title="选择栏目" @close="dialogVisible1 = false" width="70%" :draggable="false">
       <orderTable @determine="determine" @close="dialogVisible1 = false" :destroy-on-close="true"
         :headerData="headerData2" :tame="tname" :SysInfo="SysInfo" />
     </el-dialog>
-    <el-dialog v-model="dialogVisible2" title="选择栏目" @close="dialogVisible1 = false" width="70%" :draggable="false">
-      <SingleUpload  />
-    </el-dialog>
+
   </div>
 </template>
 
@@ -210,6 +214,7 @@ import orderTable from "@/components/titleBar/orderTable.vue";
 import type { HeaderItem } from '@/utils/query'
 import SingleUpload from '@/components/Upload/SingleUpload.vue'
 import router from '@/router';
+
 
 export default {
   components: {
@@ -381,7 +386,7 @@ export default {
   async mounted() {
     console.log('mounted')
 
-    const database = null
+    const database = sessionStorage.getItem('cDatabase')
     const cUserId = sessionStorage.getItem('username')
     const cVenCode = sessionStorage.getItem('cVenCode')
     var roles = sessionStorage.getItem('roles')
@@ -413,7 +418,7 @@ export default {
     cdepNameRes.data.forEach((item: any) => {
       this.cdepNameList.push({ value: item.cdepcode, label: item.cdepname })
     })
-    //存货编码列表
+    //收发类别列表
     let crdnameRes = await this.SqlWork("select", `
 select crdcode,crdname from  wlzh_v_Rd_Style`)
     console.log('ccusnameRes', crdnameRes.data)
@@ -496,7 +501,7 @@ select crdcode,crdname from  wlzh_v_Rd_Style`)
       this.headerData2 = res.data.sort((a: any, b: any) => Number(a.sortid) - Number(b.sortid));
       this.dialogVisible1 = true;
     },
-    cinvcodeFocus(){
+    cinvcodeFocus() {
       this.dialogVisible = true
     },
     determine() {
@@ -622,7 +627,7 @@ select crdcode,crdname from  wlzh_v_Rd_Style`)
     closeAsnvoucher() {
       this.dialogVisible = false
     },
-  
+
     async handle() {
       try {
         const database = sessionStorage.getItem('cDatabase')
@@ -662,18 +667,20 @@ select crdcode,crdname from  wlzh_v_Rd_Style`)
 
       }
     },
-    recognize(value:any){
+    recognize(value: any) {
       this.filters.cinvcode = value.cinvname
       this.dialogVisible = false
     },
     handleRowDoubleClick(row: any) {
-      console.log(row, this.$router, 12312312321)
-      router.push({ path: "/shipOut/warehouse", query: {} });
+      router.push({
+        path: "/lending/debitOrder", query:
+          { "vouchCode": row.vouchCode }
+      });
       // this.VouchID = row.id
 
       // this.dialogVisible = true
     },
-    close(){
+    close() {
       this.dialogVisible = false
 
     },
@@ -706,6 +713,7 @@ select crdcode,crdname from  wlzh_v_Rd_Style`)
   height: 32px;
   min-height: 0;
 }
+
 :deep(.el-date-editor) {
   height: 32px;
   min-height: 0;

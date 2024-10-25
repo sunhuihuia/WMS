@@ -127,11 +127,7 @@
         <el-col :span="20" class="el-col">
           <el-button @click="dialogVisibleClick" class type='success'>选择栏目</el-button>
         </el-col>
-        <el-col :span="2" class="el-col">
-          <el-button @click="uploadClick" class type='primary'><el-icon>
-              <Upload />
-            </el-icon>上传附件</el-button>
-        </el-col>
+  
       </el-row>
       <el-row class="el-row">
 
@@ -381,7 +377,7 @@ export default {
   async mounted() {
     console.log('mounted')
 
-    const database = null
+    const database = sessionStorage.getItem('cDatabase')
     const cUserId = sessionStorage.getItem('username')
     const cVenCode = sessionStorage.getItem('cVenCode')
     var roles = sessionStorage.getItem('roles')

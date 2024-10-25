@@ -5,21 +5,21 @@
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
             <el-form-item label="单据编号:">
-              <el-input v-model="headerData.ccode" disabled />
+              <el-input v-model="headerData.vouchCode" disabled />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple-light">
             <el-form-item label="收发类别:">
-              <el-input v-model="headerData.cvencode" disabled />
+              <el-input v-model="headerData.crdname" disabled />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
             <el-form-item label="单据类型:">
-              <el-input v-model="headerData.cvenabbname" disabled />
+              <el-input v-model="headerData.cvouchtype" disabled />
             </el-form-item>
 
           </div>
@@ -39,38 +39,23 @@
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple-light">
             <el-form-item label="仓库">
-              <el-input v-model="headerData.address" disabled />
+              <el-input v-model="headerData.cwhname" disabled />
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
             <el-form-item label="部门:">
-              <el-input v-model="headerData.dhfs" disabled />
+              <el-input v-model="headerData.cdepName" disabled />
             </el-form-item>
           </div>
         </el-col>
       </el-row>
-
       <el-row class="el-row">
         <el-col :span="8" class="el-col">
           <div class="grid-content ep-bg-purple">
-            <el-form-item label="供应商:">
-              <el-input v-model="headerData.contacts" disabled />
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple-light">
-            <el-form-item label="ID号">
-              <el-input v-model="headerData.phone" disabled />
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="8" class="el-col">
-          <div class="grid-content ep-bg-purple">
-            <el-form-item label="备注:">
-              <el-input v-model="headerData.cheadmemo" />
+            <el-form-item label="单据ID:">
+              <el-input v-model="headerData.autoid " disabled />
             </el-form-item>
           </div>
         </el-col>
@@ -78,7 +63,7 @@
 
 
       <el-row class="el-row">
-        <el-col :span="24" class="el-col">
+        <el-col :span="22" class="el-col">
 
           <el-button-group>
             <el-button @click="dialogVisible = true"><el-icon>
@@ -106,6 +91,11 @@
 
           </el-button-group>
 
+        </el-col>
+        <el-col :span="2" class="el-col">
+          <el-button @click="uploadClick" class type='primary'><el-icon>
+              <Upload />
+            </el-icon>上传附件</el-button>
         </el-col>
       </el-row>
       <el-row class="el-row">
@@ -211,7 +201,7 @@
               <el-table-column prop="dfhsl" label="待发货数量" width="120" />
               <el-table-column prop="darridateb" label="预到货日期" width="120" :sortable="true" />
               <el-table-column prop="cdefine28" label="跟单号" width="120" :sortable="true" />
-              <el-table-column prop="cvenabbname" label="供应商" width="250" :sortable="true" />
+              <el-table-column prop="cvouchtype" label="供应商" width="250" :sortable="true" />
             </el-table>
 
           </el-row>
@@ -238,6 +228,9 @@
       </template>
     </el-dialog>
   </div>
+  <el-dialog v-model="dialogVisible2" title="选择栏目" @close="dialogVisible2 = false" width="70%" :draggable="false">
+    <SingleUpload :headerData="headerData"  />
+  </el-dialog>
 </template>
 
 <script lang="ts">
@@ -250,13 +243,15 @@ import { ElMessageBox, ElMessage, ElLoading } from 'element-plus'
 import { v4 as uuidv4 } from 'uuid'
 import moment from "moment"
 import { fa } from 'element-plus/es/locale';
+import SingleUpload from '@/components/Upload/SingleUpload.vue'
+
 // import AsnLoadPm from './AsnLoadPm.vue';
 import { webapp_ws_ajax_run, webapp_urlprotocol_run, urlAddRandomNo } from "@/utils/grwebapp";
 
 export default {
-  // components:{
-  //   AsnLoadPm 
-  // 	 },
+  components: {
+    SingleUpload
+  },
   setup() {
     const instance = getCurrentInstance();
     const globalObject = instance?.appContext.config.globalProperties.$myGlobalObject
@@ -271,15 +266,15 @@ export default {
     })
     let formLabelAlign2: any = reactive({
       ddate: '111',
-      cvencode: '22',
-      cvenabbname: '3',
+      crdname: '22',
+      cvouchtype: '3',
     })
 
     interface User {
       selected: boolean
       date: string
       name: string
-      address: string
+      cwhname: string
     }
 
     const tableRowClassName = ({
@@ -304,25 +299,25 @@ export default {
         selected: false,
         date: '2016-05-03',
         name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
+        cwhname: 'No. 189, Grove St, Los Angeles',
       },
       {
         selected: false,
         date: '2016-05-02',
         name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
+        cwhname: 'No. 189, Grove St, Los Angeles',
       },
       {
         selected: false,
         date: '2016-05-04',
         name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
+        cwhname: 'No. 189, Grove St, Los Angeles',
       },
       {
         selected: true,
         date: '2016-05-01',
         name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
+        cwhname: 'No. 189, Grove St, Los Angeles',
       },
     ]
     interface ShortcutItem {
@@ -396,7 +391,8 @@ export default {
       testObj: { ddate: '' },
       tableData2: [],
       dialogVisible: false,
-      headerData: { ccode: '', cvencode: '', cvenabbname: '', ddate: '', address: '仓库', dhfs: '部门', contacts: '供货商', phone: 'ID号', cheadmemo: '', fahuori: '', yujidaohuori: '' },
+      dialogVisible2: false,
+      headerData: { vouchCode: '', crdname: '', cvouchtype: '', ddate: '', cwhname: '仓库', cdepName: '部门',autoid:"", contacts: '供货商', phone: 'ID号', cheadmemo: '', fahuori: '', yujidaohuori: '' },
       bodyData: [],
       bodyDataCopypolist_asn: [],
       filters: {
@@ -467,8 +463,8 @@ export default {
     this.bodyData = res.data.dataDetail;
 
     if (res.data.dataDetail.length > 0) {
-      this.headerData.cvencode = res.data.dataDetail[0].cvencode;
-      this.headerData.cvenabbname = res.data.dataDetail[0].cvenabbname;
+      this.headerData.crdname = res.data.dataDetail[0].crdname;
+      this.headerData.cvouchtype = res.data.dataDetail[0].cvouchtype;
       this.headerData.ddate = moment(new Date()).format('YYYY-MM-DD');
     }
 
@@ -493,16 +489,19 @@ export default {
         console.error(error);
       }
     },
+    uploadClick() {
+      this.dialogVisible2 = true
+    },
     async print(DealType: string) {
       var ModlePath = "src/views/Asn/Asn1.grf"
-      if (this.headerData.ccode == '') {
+      if (this.headerData.vouchCode == '') {
         ElMessage({
           type: 'error',
           message: '没有保存的单据不能打印!',
           showClose: true,
         })
       } else {
-        let res = await this.SqlWork("select", "wlzh_ly_getAsnData  null,'" + this.headerData.ccode + "' ");
+        let res = await this.SqlWork("select", "wlzh_ly_getAsnData  null,'" + this.headerData.vouchCode + "' ");
         if (res.data.dataDetail.length == 0) {
           ElMessage({
             type: 'error',
@@ -546,7 +545,7 @@ export default {
         var filterStr = "  ";
 
         if (this.SysInfo.cVenCode != '' && this.SysInfo.cVenCode != 'null') {
-          filterStr += " and t.cvencode=''" + this.SysInfo.cVenCode + "''";
+          filterStr += " and t.crdname=''" + this.SysInfo.cVenCode + "''";
         }
         if (this.filters.cordercode != '') {
           filterStr += " and t.cordercode=''" + this.filters.cordercode + "''"
@@ -637,13 +636,13 @@ export default {
       try {
         var cvencode0 = ''
 
-        if (cvencode0 == '' && this.bodyData.length > 0) cvencode0 = (this.bodyData[0] as any).cvencode
-        if (cvencode0 == '' && this.multipleSelection.length > 0) cvencode0 = (this.multipleSelection[0] as any).cvencode
+        if (cvencode0 == '' && this.bodyData.length > 0) cvencode0 = (this.bodyData[0] as any).crdname
+        if (cvencode0 == '' && this.multipleSelection.length > 0) cvencode0 = (this.multipleSelection[0] as any).crdname
 
         if (cvencode0 != '' && this.multipleSelection.length > 0) {
 
           var k = this.multipleSelection.findIndex((data: any) =>
-            data.cvencode != cvencode0
+            data.crdname != cvencode0
           )
 
           if (k != -1) {
@@ -655,8 +654,8 @@ export default {
             loading.close()
             return
           } else {
-            this.headerData.cvencode = (this.multipleSelection[0] as any).cvencode
-            this.headerData.cvenabbname = (this.multipleSelection[0] as any).cvenabbname
+            this.headerData.crdname = (this.multipleSelection[0] as any).crdname
+            this.headerData.cvouchtype = (this.multipleSelection[0] as any).cvouchtype
             this.headerData.ddate = moment(new Date()).format('YYYY-MM-DD')
 
             this.multipleSelection.forEach(async (item: any) => {
@@ -664,12 +663,12 @@ export default {
               var index = this.bodyData.findIndex((data: any) =>
                 data.iposid == item.iposid
               )
-              if (this.headerData.ccode != '') {
+              if (this.headerData.vouchCode != '') {
                 this.bodyData = []
-                this.headerData.ccode = ''
+                this.headerData.vouchCode = ''
               }
               if (index == -1) {
-                let res = await this.SqlWork("select", "insert into wlzh_asntemp(iposid,cinvcode,cuser_id,cvencode,dtime,bqty,dArriveDate) select id,cinvcode,'" + this.SysInfo.cUserId + "','" + item.cvencode + "',getdate()," + item.iquantity + ",dArriveDate from po_podetails pd   where id=" + item.iposid + " select @@identity id")
+                let res = await this.SqlWork("select", "insert into wlzh_asntemp(iposid,cinvcode,cuser_id,crdname,dtime,bqty,dArriveDate) select id,cinvcode,'" + this.SysInfo.cUserId + "','" + item.crdname + "',getdate()," + item.iquantity + ",dArriveDate from po_podetails pd   where id=" + item.iposid + " select @@identity id")
                 var id = res.data.dataDetail[0].id
                 newitem.id = id
                 this.bodyData.push(newitem as never)
@@ -825,7 +824,7 @@ export default {
             message: '保存成功!',
             showClose: true,
           })
-          this.headerData.ccode = res.data.dataDetail[0].Vcode
+          this.headerData.vouchCode = res.data.dataDetail[0].Vcode
 
         } else {
           ElMessage({
@@ -857,9 +856,9 @@ export default {
         .then(() => {
           that.SqlWork("update", "delete from wlzh_asntemp where cuser_id='" + this.SysInfo.cUserId + "'  ")
           this.bodyData = []
-          that.headerData.ccode = ''
-          that.headerData.cvencode = ''
-          that.headerData.cvenabbname = ''
+          that.headerData.vouchCode = ''
+          that.headerData.crdname = ''
+          that.headerData.cvouchtype = ''
           that.headerData.ddate = ''
           that.headerData.cheadmemo = ''
           that.headerData.yujidaohuori = ''
@@ -874,10 +873,10 @@ export default {
     async testSqlWork2() {
       try {
         //let res = await this.testSqlWork4()
-        let res = await this.SqlWork("select", "select 'aaaa' cvencode,'cccc' cvenabbname,'dddd' ddate")
+        let res = await this.SqlWork("select", "select 'aaaa' crdname,'cccc' cvouchtype,'dddd' ddate")
         console.log(res)
         console.log(res.data.dataDetail[0])
-        // // formLabelAlign2.cvenabbname=res.data.dataDetail[0].b;
+        // // formLabelAlign2.cvouchtype=res.data.dataDetail[0].b;
         //this.formLabelAlign2=res.data.dataDetail[0];
         // formLabelAlign2.cvenabbname2="33";
 
@@ -891,7 +890,7 @@ export default {
     async getTableData() {
       try {
         //let res = await this.testSqlWork4()
-        let res = await this.SqlWork("select", "select top 15 convert(varchar(50),rd.ddate,23) date,rd.ccode name,rds.cinvcode,rds.iquantity address  from rdrecord01 rd join rdrecords01 rds on rd.id=rds.id where rd.ddate>='2024-01-01'")
+        let res = await this.SqlWork("select", "select top 15 convert(varchar(50),rd.ddate,23) date,rd.vouchCode name,rds.cinvcode,rds.iquantity cwhname  from rdrecord01 rd join rdrecords01 rds on rd.id=rds.id where rd.ddate>='2024-01-01'")
 
         this.tableData2 = res.data.dataDetail
         let newrow = JSON.parse(JSON.stringify(res.data.dataDetail[0]))
@@ -907,7 +906,7 @@ export default {
       try {
         const res = await axios.post("https://ycjdwocloud.gnway.org:7579/Api/values/Work", {
           "CommandType": "select", "database": "master",
-          "SqlsStr": "select 'aaaa' cvencode,'cccc' cvenabbname,'dddd' ddate"
+          "SqlsStr": "select 'aaaa' crdname,'cccc' cvouchtype,'dddd' ddate"
         });
         return res
       } catch (error) {
@@ -953,8 +952,6 @@ export default {
 
 
 <style lang="scss" scoped>
-
-
 .el-row:last-child {
   margin-bottom: 0;
 }
