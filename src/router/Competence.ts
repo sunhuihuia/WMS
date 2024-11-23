@@ -308,7 +308,7 @@ export const Competence = [
   children: [
     {
       always_show: null,
-      component: () => import("/src/views/revert/AsnAdd.vue"),
+      component: () => import("/src/views/revert/revertAdd.vue"),
       hidden: false,
       icon: "document",
       id:52,
@@ -327,7 +327,7 @@ export const Competence = [
     },
     {
       always_show: null,
-      component: () => import("/src/views/revert/AsnvoucherList.vue"),
+      component: () => import("/src/views/revert/revertList.vue"),
       hidden: false,
       icon: "document",
       id: 51,

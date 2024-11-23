@@ -183,9 +183,7 @@
       <orderTable @determine="determine" @close="dialogVisible1 = false" :destroy-on-close="true"
         :headerData="headerData2" :tame="tname" :SysInfo="SysInfo" />
     </el-dialog>
-    <el-dialog v-model="dialogVisible2" title="选择栏目" @close="dialogVisible1 = false" width="70%" :draggable="false">
-      <SingleUpload  />
-    </el-dialog>
+
   </div>
 </template>
 
@@ -204,14 +202,12 @@ import { fa } from 'element-plus/es/locale';
 import cinvcodeDialog from '../shipOut/cinvcodeDialog.vue';
 import orderTable from "@/components/titleBar/orderTable.vue";
 import type { HeaderItem } from '@/utils/query'
-import SingleUpload from '@/components/Upload/SingleUpload.vue'
 import router from '@/router';
 
 export default {
   components: {
     cinvcodeDialog,
     orderTable,
-    SingleUpload
   },
   setup() {
     const instance = getCurrentInstance();
@@ -467,7 +463,7 @@ select crdcode,crdname from  wlzh_v_Rd_Style`)
     },
     async dialogVisibleClick() {
 
-      let res1 = await this.SqlWork("select", `select  * from wlzh_Dz_posDetail_field`)
+      let res1 = await this.SqlWork("select", `select  * from wlzh_v_DaoJuDetail_gh`)
       let res = await this.SqlWork('select', "wlzh_PrintsettingLoad  '" + this.tname + "', '" + this.SysInfo.cUserId + "'")
       let result = res1.data.filter((item: any) => {
         return res.data.every((item1: any) => {

@@ -486,18 +486,47 @@ select crdcode,crdname from  wlzh_v_Rd_Style`)
       const CopypolistTableRef: any = this.$refs.multipleTableRef
       const columns = CopypolistTableRef.columns
       const list: any = []
-      result.forEach((item: any, index: any) => {
-        list.push({
-          'sfxs': 0,
-          'sortid': res.data.length + 1 + index,
-          'name': this.headerData1.length === 0 ? columns.find((value: any) => value.property === item.name)?.label || item.name : item.name,
-          'field': item.name,
-          'defaultname': item.name,
-          'width': '120'
+      const list1: any = []
+      if (res.data.length === 0) {
+        result.forEach((item: any, index: any) => {
+          if (columns.find((value: any) => value.property === item.ColumnName)) {
+            list.push({
+              'sfxs': 1,
+              'sortid': list.length + 1,
+              'name': columns.find((value: any) => value.property === item.ColumnName).label,
+              'field': item.ColumnName,
+              'defaultname': item.ColumnName,
+              'width': '120'
+            })
+          }
         })
-      })
-
+        result.forEach((item: any, index: any) => {
+          if (!columns.find((value: any) => value.property === item.ColumnName)) {
+            list.push({
+              'sfxs': 0,
+              'sortid': list.length + 1,
+              'name': item.ColumnName,
+              'field': item.ColumnName,
+              'defaultname': item.ColumnName,
+              'width': '120'
+            })
+          }
+        })
+      } else {
+        result.forEach((item: any, index: any) => {
+          list1.push({
+            'sfxs': 0,
+            'sortid': res.data.length + 1 + index,
+            'name': this.headerData1.length === 0 ? columns.find((value: any) => value.property === item.ColumnName)?.label || item.ColumnName : item.ColumnName,
+            'field': item.ColumnName,
+            'defaultname': item.ColumnName,
+            'width': '120'
+          })
+        })
+      }
+      
       res.data.push(...list)
+      res.data.push(...list1)
       this.headerData2 = res.data.sort((a: any, b: any) => Number(a.sortid) - Number(b.sortid));
       this.dialogVisible1 = true;
     },

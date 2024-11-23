@@ -143,14 +143,12 @@
           </el-table-column>
           <el-table-column prop="cbatch" label="批次" width="250" :sortable="true">
             <template #default="scope">
-              <input v-model="scope.row.cbatch" class="squantity-input"
-             type=text t_value="" o_value="" />
+              <input v-model="scope.row.cbatch" class="squantity-input" type=text t_value="" o_value="" />
             </template>
           </el-table-column>
           <el-table-column prop="cmemo" label="备注" width="250" :sortable="true">
             <template #default="scope">
-              <input v-model="scope.row.cmemo" class="squantity-input"
-             type=text t_value="" o_value="" />
+              <input v-model="scope.row.cmemo" class="squantity-input" type=text t_value="" o_value="" />
             </template>
           </el-table-column>
 
@@ -279,6 +277,7 @@ import { v4 as uuidv4 } from 'uuid'
 import moment from "moment"
 import { fa } from 'element-plus/es/locale';
 import SingleUpload from '@/components/Upload/SingleUpload.vue'
+import router from '@/router';
 
 // import AsnLoadPm from './AsnLoadPm.vue';
 import { webapp_ws_ajax_run, webapp_urlprotocol_run, urlAddRandomNo } from "@/utils/grwebapp";
@@ -311,6 +310,7 @@ export default {
       name: string
       cwhname: string
     }
+
 
     const tableRowClassName = ({
       row,
@@ -412,7 +412,7 @@ export default {
 
 
     return { // 返回组件中可使用的属性和方法
-      labelPosition, labelPosition2, formLabelAlign, formLabelAlign2, tableRowClassName, tableData, globalObject, shortcuts
+    labelPosition, labelPosition2, formLabelAlign, formLabelAlign2, tableRowClassName, tableData, globalObject, shortcuts
     };
 
   },
@@ -488,7 +488,7 @@ export default {
   async mounted() {
     console.log('AsnAddmounted')
 
-    
+
     const database = sessionStorage.getItem('cDatabase')
     const cUserId = sessionStorage.getItem('username')
     const cVenCode = sessionStorage.getItem('cVenCode')
@@ -533,21 +533,27 @@ export default {
       this.cdepNameList.push({ value: item.cdepcode, label: item.cdepname })
     })
     let res = await this.SqlWork("select", "wlzh_Dz_posDetail '" + this.SysInfo.cUserId + "' ");
-    console.log(res, 231213213124213);
-
+    console.log(res, 231213213124213)
     this.bodyData = [];
-
     if (res.data.length > 0) {
       this.headerData.crdname = res.data[0].crdname;
       this.headerData.cvouchtype = res.data[0].cvouchtype;
       this.headerData.ddate = moment(new Date()).format('YYYY-MM-DD');
     }
-    console.log(this.$route.query.vouchCode);
-    if(this.$route.query.vouchCode){
+    if (this.$route.query.vouchCode) {
+      var filterStr: any = "  ";
+
       this.headerData.vouchCode = this.$route.query.vouchCode + ''
-      const res1 =   await this.SqlWork("select", `select * from WLZH_Dz_DaoJuTemp where vouchCode='${this.$route.query.vouchCod}'`)
-      console.log(res1,123123123);
-      
+      const res1 = await this.SqlWork("select", `select * from WLZH_Dz_DaoJuTemp where vouchCode='${this.headerData.vouchCode}'`)
+      if (this.headerData.vouchCode) {
+        filterStr += (filterStr !== "  " ? 'and ' : "where ") + "  vouchCode='" + this.headerData.vouchCode + "'"
+      }
+      const res2 = await this.SqlWork("select", "select * from wlzh_v_DaoJuDetail_jc " + filterStr)
+      console.log(res1, res2.data[0],this.headerData,'this.headerDatathis.headerDatathis.headerDatathis.headerData')
+      this.headerData.crdname = res2.data[0].cRdName
+      this.headerData.ddate = res2.data[0].vouchDate
+      this.headerData.cwhname = res2.data[0].cwhcode
+      this.headerData.cdepName = res2.data[0].cdepcode
       this.bodyData = res1.data
     }
 
@@ -737,14 +743,14 @@ export default {
             this.headerData.crdname = (this.multipleSelection[0] as any).crdname
             // this.headerData.cvouchtype = (this.multipleSelection[0] as any).cvouchtype
             this.headerData.ddate = moment(new Date()).format('YYYY-MM-DD')
-            
+
             this.multipleSelection.forEach(async (item: any) => {
               item.cmemo = ''
-              item.cposcode=''
+              item.cposcode = ''
               item.cbatch = ''
               var newitem = JSON.parse(JSON.stringify(item))
-              console.log(newitem,123123123);
-              
+              console.log(newitem, 123123123);
+
               // console.log(item.ccode);
               // console.log(this.multipleSelection,this.bodyData,21321312312345555555555);
               item.cposcode = ''
@@ -834,7 +840,7 @@ export default {
         b = false
         return;
       }
-      if(!this.headerData.cwhname){
+      if (!this.headerData.cwhname) {
         ElMessageBox.confirm(
           '请选择仓库',
           '错误！',
@@ -850,7 +856,7 @@ export default {
       if (this.bodyData.length > 0 && b == true) {
         this.bodyData.forEach(async (item: any) => {
           var index = this.bodyData.indexOf(item as never);
-          if(!item.cposcode){
+          if (!item.cposcode) {
             ElMessageBox.confirm(
               '第' + (index + 1) + '行请选择货位',
               '错误！',
@@ -968,7 +974,9 @@ VALUES('01','U8','','${this.headerData.ddate}','${item.id}','${item.autoid}','${
           that.headerData.cheadmemo = ''
           that.headerData.yujidaohuori = ''
           that.headerData.fahuori = ''
-
+          router.push({
+            path: "/lending/debitOrder"
+          });
 
         })
         .catch(() => {
